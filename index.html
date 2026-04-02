@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Shisha POS | Rands Lounge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .pos-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* Header */
+        .pos-header {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid #d32f2f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo h1 {
+            background: #d32f2f;
+            color: white;
+            padding: 8px 20px;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            text-align: center;
+            background: #f9f9f9;
+            padding: 8px 16px;
+            border-radius: 30px;
+            min-width: 80px;
+        }
+        .stat-number {
+            font-size: 26px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        /* Main grid */
+        .pos-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 900px) {
+            .pos-main { grid-template-columns: 1fr; }
+        }
+        /* New order card */
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 20px;
+            border-left: 4px solid #d32f2f;
+            padding-left: 12px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #444;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 40px;
+            font-size: 15px;
+            background: white;
+        }
+        .payment-methods {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .payment-option {
+            flex: 1;
+        }
+        .payment-option input {
+            display: none;
+        }
+        .payment-option label {
+            display: block;
+            padding: 10px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 40px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0;
+        }
+        .payment-option input:checked + label {
+            background: #d32f2f;
+            color: white;
+            border-color: #d32f2f;
+        }
+        .account-field {
+            display: none;
+            margin-top: 10px;
+        }
+        .price-display {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .price-display .total {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        .process-btn {
+            width: 100%;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .process-btn:hover {
+            background: #1b5e20;
+            transform: scale(0.98);
+        }
+        /* Active sessions list */
+        .sessions-list {
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+        .session-item {
+            background: #fafafa;
+            border-left: 5px solid #2e7d32;
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .session-item.expired { border-left-color: #b71c1c; background: #ffefef; }
+        .session-item.refill { border-left-color: #ff9800; background: #fff8e7; }
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .shisha-id {
+            font-weight: bold;
+            font-size: 16px;
+            color: #d32f2f;
+        }
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+        .status-badge.active { background: #2e7d32; color: white; }
+        .status-badge.refill { background: #ff9800; color: #1e1e1e; }
+        .status-badge.expired { background: #b71c1c; color: white; }
+        .status-badge.paused { background: #ffa500; color: #1e1e1e; }
+        .timer {
+            font-family: monospace;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .session-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .session-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .refill-btn { background: #ff9800; color: #1e1e1e; }
+        .end-btn { background: #d32f2f; color: white; }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .modal-content h3 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .ok-btn { background: #2e7d32; color: white; }
+        .cancel-btn { background: #d32f2f; color: white; }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            font-size: 13px;
+            color: #999;
+        }
+        .footer span { color: #d32f2f; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="pos-container">
+    <div class="pos-header">
+        <div class="logo">
+            <h1>🔥 SHISHA POS</h1>
+        </div>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number" id="statActive">0</div><div class="stat-label">Active</div></div>
+            <div class="stat-card"><div class="stat-number" id="statRefill">0</div><div class="stat-label">Refill Soon</div></div>
+            <div class="stat-card"><div class="stat-number" id="statExpired">0</div><div class="stat-label">Expired</div></div>
+        </div>
+    </div>
+
+    <div class="pos-main">
+        <!-- New Order Panel -->
+        <div class="card">
+            <div class="section-title">📝 NEW SESSION</div>
+            <div class="form-group">
+                <label>📍 LOCATION</label>
+                <select id="locationSelect">
+                    <option value="Genera Hub">Genera Hub</option>
+                    <option value="General Vibe Stage">General Vibe Stage</option>
+                    <option value="VIP South">VIP South</option>
+                    <option value="VIP North">VIP North</option>
+                    <option value="Main VIP">Main VIP</option>
+                    <option value="Shisha Lounge">Shisha Lounge</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>🍃 FLAVOUR</label>
+                <select id="flavourSelect">
+                    <option value="Mint+Grape">Mint+Grape</option>
+                    <option value="Apple">Apple</option>
+                    <option value="Berry with Mint">Berry with Mint</option>
+                    <option value="Bombay Pan Masala">Bombay Pan Masala</option>
+                    <option value="Blueberry">Blueberry</option>
+                    <option value="Watermelon">Watermelon</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>🆔 HOOKAH</label>
+                <select id="shishaSelect"><option>Loading...</option></select>
+            </div>
+
+            <div class="payment-methods">
+                <div class="payment-option"><input type="radio" name="payment" value="cash" id="cash" checked><label for="cash">💵 CASH</label></div>
+                <div class="payment-option"><input type="radio" name="payment" value="card" id="card"><label for="card">💳 CARD</label></div>
+                <div class="payment-option"><input type="radio" name="payment" value="wallet" id="wallet"><label for="wallet">👛 WALLET</label></div>
+            </div>
+            <div id="accountField" class="account-field">
+                <input type="text" id="accountIdInput" placeholder="Phone number (e.g., +27812345678)">
+                <div id="walletHint" style="font-size:12px; color:#d32f2f; margin-top:5px;"></div>
+            </div>
+
+            <div class="price-display">
+                <div>Shisha Session (60 min)</div>
+                <div class="total">R260.00</div>
+            </div>
+            <button class="process-btn" id="startSessionBtn">✅ START SESSION</button>
+        </div>
+
+        <!-- Active Sessions Panel -->
+        <div class="card">
+            <div class="section-title">🔥 ACTIVE SESSIONS</div>
+            <div id="sessionsList" class="sessions-list">
+                <div style="text-align:center; padding:20px;">Loading...</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        Created by <span>Mziwonke KaBuyaphi</span> | Rands Shisha Lounge
+    </div>
+</div>
+
+<!-- Generic Modal -->
+<div id="genericModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">Notification</h3>
+        <p id="modalMessage">Message</p>
+        <div class="modal-buttons">
+            <button id="modalOkBtn" class="ok-btn">OK</button>
+            <button id="modalCancelBtn" class="cancel-btn" style="display:none;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- STORAGE KEYS ----------
+    const WALLET_ACCOUNTS_KEY = 'rands_accounts_v2';
+    const WALLET_TX_KEY = 'rands_transactions';
+    const SESSIONS_KEY = 'shishaSessions';
+    const REQUESTS_KEY = 'customerRequests'; // not heavily used in POS but kept for consistency
+
+    const SESSION_PRICE = 260;
+    const REFILL_PRICE = 260;
+    const COAL_DURATION = 60;
+    const REFILL_THRESHOLD = 15;
+
+    let activeSessions = [];
+    let availableShishas = [];
+
+    // ---------- MODAL HELPERS ----------
+    function showModal(title, message, onConfirm, showCancel = false, onCancel = null) {
+        const modal = document.getElementById('genericModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const okBtn = document.getElementById('modalOkBtn');
+        const cancelBtn = document.getElementById('modalCancelBtn');
+
+        modalTitle.innerText = title;
+        modalMessage.innerText = message;
+
+        const newOk = okBtn.cloneNode(true);
+        okBtn.parentNode.replaceChild(newOk, okBtn);
+        const newCancel = cancelBtn.cloneNode(true);
+        cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
+
+        if (showCancel && onCancel) {
+            newCancel.style.display = 'block';
+            newCancel.onclick = () => {
+                modal.style.display = 'none';
+                if (onCancel) onCancel();
+            };
+        } else {
+            newCancel.style.display = 'none';
+        }
+
+        newOk.onclick = () => {
+            modal.style.display = 'none';
+            if (onConfirm) onConfirm();
+        };
+
+        modal.style.display = 'flex';
+    }
+
+    function showAlert(message, title = "Notification") {
+        showModal(title, message, null, false);
+    }
+
+    function showConfirm(title, message, onConfirm, onCancel = null) {
+        showModal(title, message, onConfirm, true, onCancel);
+    }
+
+    // ---------- WALLET FUNCTIONS ----------
+    function getWalletAccounts() { return JSON.parse(localStorage.getItem(WALLET_ACCOUNTS_KEY) || '[]'); }
+    function saveWalletAccounts(acc) { localStorage.setItem(WALLET_ACCOUNTS_KEY, JSON.stringify(acc)); triggerStorage(); }
+    function addTransaction(accountId, desc, amount) {
+        let all = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}');
+        if (!all[accountId]) all[accountId] = [];
+        all[accountId].unshift({ desc, amount, date: new Date().toISOString() });
+        localStorage.setItem(WALLET_TX_KEY, JSON.stringify(all));
+    }
+    function deductFromWallet(accountId, amount, reason) {
+        let accounts = getWalletAccounts();
+        let idx = accounts.findIndex(a => a.id === accountId);
+        if (idx === -1) return { success: false, error: "Account not found" };
+        if (accounts[idx].balance < amount) return { success: false, error: `Insufficient balance. Available: R${accounts[idx].balance.toFixed(2)}` };
+        accounts[idx].balance -= amount;
+        saveWalletAccounts(accounts);
+        addTransaction(accountId, reason, -amount);
+        return { success: true, newBalance: accounts[idx].balance, name: accounts[idx].name };
+    }
+    function triggerStorage() { window.dispatchEvent(new Event('storage')); }
+
+    function getWalletBalanceHint(accountId) {
+        if (!accountId) return null;
+        const acc = getWalletAccounts().find(a => a.id === accountId);
+        return acc ? { balance: acc.balance, name: acc.name } : null;
+    }
+
+    // ---------- SESSION MANAGEMENT ----------
+    function loadSessions() {
+        const saved = localStorage.getItem(SESSIONS_KEY);
+        if (saved) {
+            activeSessions = JSON.parse(saved).map(s => ({
+                ...s,
+                startTime: new Date(s.startTime),
+                lastRefillTime: new Date(s.lastRefillTime)
+            }));
+        } else {
+            activeSessions = [];
+        }
+        updateAvailableShishas();
+        renderSessions();
+        updateStats();
+    }
+
+    function saveSessions() {
+        localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
+        triggerStorage();
+        loadSessions(); // refresh everything
+    }
+
+    function updateAvailableShishas() {
+        const allShishas = Array.from({ length: 30 }, (_, i) => `SH-${String(i+1).padStart(3,'0')}`);
+        const occupied = activeSessions.map(s => s.shishaId);
+        availableShishas = allShishas.filter(id => !occupied.includes(id));
+        const shishaSelect = document.getElementById('shishaSelect');
+        if (shishaSelect) {
+            const currentVal = shishaSelect.value;
+            shishaSelect.innerHTML = '<option value="">Select hookah...</option>';
+            availableShishas.forEach(sh => {
+                const opt = document.createElement('option');
+                opt.value = sh;
+                opt.textContent = `${sh} (Available)`;
+                shishaSelect.appendChild(opt);
+            });
+            if (currentVal && availableShishas.includes(currentVal)) shishaSelect.value = currentVal;
+        }
+    }
+
+    function formatTime(seconds) {
+        const isNegative = seconds < 0;
+        const absSec = Math.abs(seconds);
+        const mins = Math.floor(absSec / 60);
+        const secs = Math.floor(absSec % 60);
+        return `${isNegative ? '-' : ''}${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimers() {
+        let changed = false;
+        const now = new Date();
+        activeSessions.forEach(s => {
+            if (!s.paused) {
+                const elapsed = (now - s.lastRefillTime) / 1000;
+                const remain = COAL_DURATION - elapsed;
+                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
+                    s.remainingTime = remain;
+                    if (s.remainingTime <= 0) s.status = 'expired';
+                    else if (s.remainingTime <= REFILL_THRESHOLD) s.status = 'refill';
+                    else s.status = 'active';
+                    changed = true;
+                }
+            }
+        });
+        if (changed) {
+            localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
+            loadSessions(); // re-render
+        } else {
+            // just update timer displays without full re-render for smoothness
+            updateTimerDisplays();
+        }
+    }
+
+    function updateTimerDisplays() {
+        const items = document.querySelectorAll('.session-item');
+        items.forEach(item => {
+            const shId = item.getAttribute('data-shisha');
+            const session = activeSessions.find(s => s.shishaId === shId);
+            if (session) {
+                const timerSpan = item.querySelector('.timer');
+                if (timerSpan) timerSpan.innerHTML = `⏱️ ${formatTime(session.remainingTime)}`;
+            }
+        });
+        updateStats();
+    }
+
+    function updateStats() {
+        let active = 0, refill = 0, expired = 0;
+        for (let i=1; i<=30; i++) {
+            const s = activeSessions.find(s => s.shishaId === `SH-${String(i).padStart(3,'0')}`);
+            if (!s) continue;
+            if (s.paused) continue; // paused not counted in these stats for POS simplicity
+            if (s.status === 'expired') expired++;
+            else if (s.status === 'refill') refill++;
+            else active++;
+        }
+        document.getElementById('statActive').innerText = active;
+        document.getElementById('statRefill').innerText = refill;
+        document.getElementById('statExpired').innerText = expired;
+    }
+
+    function renderSessions() {
+        const container = document.getElementById('sessionsList');
+        if (activeSessions.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px;">No active sessions</div>';
+            return;
+        }
+        const sorted = [...activeSessions].sort((a,b) => {
+            const priority = (s) => s.paused ? 3 : (s.status === 'expired' ? 0 : (s.status === 'refill' ? 1 : 2));
+            return priority(a) - priority(b);
+        });
+        container.innerHTML = sorted.map(s => {
+            let statusClass = 'active';
+            let statusText = 'ACTIVE';
+            if (s.paused) { statusClass = 'paused'; statusText = 'PAUSED'; }
+            else if (s.status === 'expired') { statusClass = 'expired'; statusText = 'EXPIRED'; }
+            else if (s.status === 'refill') { statusClass = 'refill'; statusText = 'REFILL SOON'; }
+            const timeStr = formatTime(s.remainingTime);
+            return `
+                <div class="session-item ${s.status === 'expired' ? 'expired' : (s.status === 'refill' ? 'refill' : '')}" data-shisha="${s.shishaId}">
+                    <div class="session-header">
+                        <span class="shisha-id">🔥 ${s.shishaId}</span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div>📍 ${s.location} | 🍃 ${s.flavour}</div>
+                    <div>💰 Total: R${s.amount} | 🔄 Refills: ${s.refillCount || 0}</div>
+                    <div class="timer">⏱️ ${timeStr}</div>
+                    <div class="session-actions">
+                        <button class="refill-btn" onclick="refillSession('${s.shishaId}')">🔄 Refill (R${REFILL_PRICE})</button>
+                        <button class="end-btn" onclick="endSession('${s.shishaId}')">❌ End</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ---------- ACTIONS ----------
+    function startNewSession() {
+        const location = document.getElementById('locationSelect').value;
+        const flavour = document.getElementById('flavourSelect').value;
+        const shishaId = document.getElementById('shishaSelect').value;
+        const payment = document.querySelector('input[name="payment"]:checked').value;
+        const accountId = document.getElementById('accountIdInput').value.trim();
+
+        if (!location || !flavour || !shishaId) {
+            showAlert("Please fill all fields and select an available hookah.");
+            return;
+        }
+        if (payment === 'wallet' && !accountId) {
+            showAlert("Please enter Account ID for wallet payment.");
+            return;
+        }
+
+        // Wallet deduction if needed
+        if (payment === 'wallet') {
+            const result = deductFromWallet(accountId, SESSION_PRICE, `New session ${shishaId} (${location})`);
+            if (!result.success) {
+                showAlert(result.error);
+                return;
+            }
+            showAlert(`✅ Payment successful! Balance: R${result.newBalance.toFixed(2)}`);
+        } else {
+            // For cash/card, we just inform (no actual deduction)
+            if (!confirm(`Start session with ${payment.toUpperCase()} payment?`)) return;
+        }
+
+        const newSession = {
+            id: Date.now(),
+            shishaId: shishaId,
+            location: location,
+            flavour: flavour,
+            startTime: new Date(),
+            lastRefillTime: new Date(),
+            remainingTime: COAL_DURATION,
+            paymentMethod: payment === 'wallet' ? `Rands Wallet (${accountId})` : payment.toUpperCase(),
+            amount: SESSION_PRICE,
+            status: 'active',
+            refillCount: 0,
+            accountId: payment === 'wallet' ? accountId : null,
+            paused: false
+        };
+        activeSessions.push(newSession);
+        saveSessions();
+        showAlert(`✅ Session started!\n${shishaId} | ${location} | ${flavour}`);
+        // Reset form
+        document.getElementById('shishaSelect').value = '';
+        document.getElementById('accountIdInput').value = '';
+        document.getElementById('cash').checked = true;
+        document.getElementById('accountField').classList.remove('show');
+    }
+
+    window.refillSession = function(shishaId) {
+        const session = activeSessions.find(s => s.shishaId === shishaId);
+        if (!session) return;
+        if (session.paused) {
+            showAlert("Session is paused. Resume before refill.");
+            return;
+        }
+        const processRefill = () => {
+            if (session.paymentMethod.includes('Wallet') && session.accountId) {
+                const res = deductFromWallet(session.accountId, REFILL_PRICE, `Refill ${session.shishaId}`);
+                if (!res.success) { showAlert(res.error); return; }
+            } else {
+                if (!confirm(`Refill R${REFILL_PRICE} for ${session.shishaId}?`)) return;
+            }
+            session.remainingTime = COAL_DURATION;
+            session.lastRefillTime = new Date();
+            session.status = 'active';
+            session.amount += REFILL_PRICE;
+            session.refillCount = (session.refillCount || 0) + 1;
+            saveSessions();
+            showAlert(`✅ Refilled! New total: R${session.amount}`);
+        };
+        showConfirm("Confirm Refill", `Refill ${session.shishaId} for R${REFILL_PRICE}?`, processRefill);
+    };
+
+    window.endSession = function(shishaId) {
+        const idx = activeSessions.findIndex(s => s.shishaId === shishaId);
+        if (idx === -1) return;
+        const session = activeSessions[idx];
+        showConfirm("End Session", `End session for ${session.shishaId}? Total: R${session.amount}`, () => {
+            activeSessions.splice(idx, 1);
+            saveSessions();
+            showAlert("Session ended");
+        });
+    };
+
+    // ---------- UI HANDLERS ----------
+    function toggleWalletField() {
+        const walletRadio = document.getElementById('wallet');
+        const accountField = document.getElementById('accountField');
+        const hint = document.getElementById('walletHint');
+        if (walletRadio.checked) {
+            accountField.classList.add('show');
+            const accountId = document.getElementById('accountIdInput').value.trim();
+            if (accountId) {
+                const info = getWalletBalanceHint(accountId);
+                if (info) hint.innerText = `💰 ${info.name} | Balance: R${info.balance.toFixed(2)}`;
+                else hint.innerText = '⚠️ Account not found';
+            } else {
+                hint.innerText = '';
+            }
+        } else {
+            accountField.classList.remove('show');
+            hint.innerText = '';
+        }
+    }
+
+    function updateWalletHint() {
+        if (document.getElementById('wallet').checked) {
+            const accountId = document.getElementById('accountIdInput').value.trim();
+            const hint = document.getElementById('walletHint');
+            if (accountId) {
+                const info = getWalletBalanceHint(accountId);
+                if (info) hint.innerText = `💰 ${info.name} | Balance: R${info.balance.toFixed(2)}`;
+                else hint.innerText = '⚠️ Account not found';
+            } else {
+                hint.innerText = '';
+            }
+        }
+    }
+
+    // ---------- INITIALIZE ----------
+    function init() {
+        loadSessions();
+        setInterval(updateTimers, 1000);
+        setInterval(loadSessions, 2000);
+        window.addEventListener('storage', () => loadSessions());
+
+        document.getElementById('startSessionBtn').addEventListener('click', startNewSession);
+        document.querySelectorAll('input[name="payment"]').forEach(radio => radio.addEventListener('change', toggleWalletField));
+        document.getElementById('accountIdInput').addEventListener('input', updateWalletHint);
+        toggleWalletField();
+    }
+
+    init();
+</script>
+</body>
+</html>

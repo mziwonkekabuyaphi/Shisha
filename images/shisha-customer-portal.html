@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Shisha Premium Lounge | Customer Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        body {
+            background: #f5f5f5;
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        .app-header {
+            background: #d32f2f;
+            color: white;
+            border-radius: 28px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .app-header h1 {
+            font-size: 28px;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+        .app-header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .account-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 10px 14px;
+            border-radius: 40px;
+        }
+        .account-bar input {
+            background: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: 14px;
+            width: 180px;
+        }
+        .account-bar button {
+            background: #ff9800;
+            border: none;
+            color: #1e1e1e;
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid #eee;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .btn-icon {
+            background: #fff;
+            border: 1px solid #ffe0e0;
+            border-radius: 20px;
+            padding: 12px 6px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-icon i {
+            display: block;
+            font-size: 20px;
+            color: #d32f2f;
+            margin-bottom: 6px;
+        }
+        .btn-icon:hover {
+            background: #fff5f5;
+            transform: scale(0.97);
+        }
+        .order-btn {
+            background: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+        .timer {
+            font-size: 28px;
+            font-weight: 800;
+            font-family: monospace;
+            color: #d32f2f;
+            text-align: center;
+            margin: 12px 0;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .badge {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+        .small-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 8px;
+        }
+        hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<div class="app-header">
+    <h1>🍃 SHISHA PREMIUM LOUNGE</h1>
+    <p>✦ Customer Portal ✦</p>
+    <div class="account-bar">
+        <span style="font-size:14px;">👤 My Account (Phone)</span>
+        <input type="text" id="customerAccountInput" placeholder="+27812345678" value="+27812345678">
+        <button id="setAccountBtn">Set / Refresh</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="flex-between">
+        <div><strong>💰 My Wallet Balance</strong></div>
+        <div><span id="custWalletBalance">R0.00</span></div>
+    </div>
+    <div class="grid-3" style="margin-top: 10px;">
+        <div class="btn-icon" id="custRefillBtn"><i class="fa fa-plus-circle"></i> Refill</div>
+        <div class="btn-icon" id="custHistoryBtn"><i class="fa fa-history"></i> History</div>
+        <div class="btn-icon" id="custRewardsBtn"><i class="fa fa-gift"></i> Rewards</div>
+    </div>
+</div>
+
+<div class="card" id="custActiveSessionCard">
+    <h3>🔥 My Hookah Session</h3>
+    <div id="custSessionInfo">No active session. Order below.</div>
+    <div id="custTimerDisplay" class="timer"></div>
+    <div class="grid-3" id="custRequestButtons" style="margin-top: 12px;">
+        <div class="btn-icon request-action" data-req="coal_refill"><i class="fa fa-fire"></i> Coal Refill</div>
+        <div class="btn-icon request-action" data-req="flavor_change"><i class="fa fa-leaf"></i> Change Flavor</div>
+        <div class="btn-icon request-action" data-req="extend_time"><i class="fa fa-clock"></i> Extend 30min</div>
+        <div class="btn-icon request-action" data-req="end_session"><i class="fa fa-stop"></i> End Session</div>
+        <div class="btn-icon request-action" data-req="top_up"><i class="fa fa-wallet"></i> Top-up Wallet</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>📝 Order New Session</h3>
+    <select id="orderLocation">
+        <option value="Genera Hub">Genera Hub</option>
+        <option value="General Vibe Stage">General Vibe Stage</option>
+        <option value="VIP South">VIP South</option>
+        <option value="VIP North">VIP North</option>
+        <option value="Main VIP">Main VIP</option>
+        <option value="Shisha Lounge">Shisha Lounge</option>
+    </select>
+    <select id="orderFlavour">
+        <option value="Mint+Grape">Mint+Grape</option>
+        <option value="Apple">Apple</option>
+        <option value="Berry with Mint">Berry with Mint</option>
+        <option value="Bombay Pan Masala">Bombay Pan Masala</option>
+    </select>
+    <div class="order-btn" id="customerPlaceOrderBtn">Start Session - R260 (Pay with Wallet)</div>
+    <div class="small-text">💳 Your wallet will be charged if enough balance</div>
+</div>
+
+<script>
+    // ---------- STORAGE KEYS ----------
+    const WALLET_ACCOUNTS_KEY = 'rands_accounts_v2';
+    const WALLET_TX_KEY = 'rands_transactions';
+    const SESSIONS_KEY = 'shishaSessions';
+    const REQUESTS_KEY = 'customerRequests';
+
+    const SESSION_PRICE = 260;
+    const REFILL_PRICE = 260;
+    const COAL_DURATION = 60; // seconds
+
+    let activeSessions = [];
+    let currentAccountId = "+27812345678";
+
+    // ---------- WALLET HELPERS ----------
+    function getWalletAccounts() { return JSON.parse(localStorage.getItem(WALLET_ACCOUNTS_KEY) || '[]'); }
+    function saveWalletAccounts(acc) { localStorage.setItem(WALLET_ACCOUNTS_KEY, JSON.stringify(acc)); triggerStorage(); }
+    function addTransaction(accountId, desc, amount) {
+        let all = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}');
+        if (!all[accountId]) all[accountId] = [];
+        all[accountId].unshift({ desc, amount, date: new Date().toISOString() });
+        localStorage.setItem(WALLET_TX_KEY, JSON.stringify(all));
+    }
+    function deductFromWallet(accountId, amount, reason) {
+        let accounts = getWalletAccounts();
+        let idx = accounts.findIndex(a => a.id === accountId);
+        if (idx === -1) return { success: false, error: "Account not found" };
+        if (accounts[idx].balance < amount) return { success: false, error: "Insufficient balance" };
+        accounts[idx].balance -= amount;
+        saveWalletAccounts(accounts);
+        addTransaction(accountId, reason, -amount);
+        return { success: true, newBalance: accounts[idx].balance, name: accounts[idx].name };
+    }
+    function addToWallet(accountId, amount, desc) {
+        let accounts = getWalletAccounts();
+        let idx = accounts.findIndex(a => a.id === accountId);
+        if (idx === -1) { accounts.push({ id: accountId, name: `User ${accountId}`, balance: amount }); }
+        else { accounts[idx].balance += amount; }
+        saveWalletAccounts(accounts);
+        addTransaction(accountId, desc, amount);
+    }
+    function ensureDemoAccount() {
+        let accounts = getWalletAccounts();
+        if (!accounts.find(a => a.id === "+27812345678")) {
+            accounts.push({ id: "+27812345678", name: "Demo User", balance: 520 });
+            saveWalletAccounts(accounts);
+        }
+    }
+    function triggerStorage() { window.dispatchEvent(new Event('storage')); }
+
+    // ---------- SESSION HELPERS ----------
+    function loadSessions() {
+        let saved = localStorage.getItem(SESSIONS_KEY);
+        if (saved) activeSessions = JSON.parse(saved).map(s => ({ ...s, startTime: new Date(s.startTime), lastRefillTime: new Date(s.lastRefillTime) }));
+        else activeSessions = [];
+        updateCustomerUI();
+    }
+    function saveSessions() {
+        localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
+        triggerStorage();
+        updateCustomerUI();
+    }
+    function updateTimers() {
+        let now = new Date();
+        let changed = false;
+        activeSessions.forEach(s => {
+            if (!s.paused && (s.status === 'active' || s.status === 'refill')) {
+                let elapsed = (now - s.lastRefillTime) / 1000;
+                let remain = Math.max(0, COAL_DURATION - elapsed);
+                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
+                    s.remainingTime = remain;
+                    if (s.remainingTime <= 0) s.status = 'expired';
+                    else if (s.remainingTime <= 10) s.status = 'refill';
+                    else s.status = 'active';
+                    changed = true;
+                }
+            }
+        });
+        if (changed) saveSessions();
+    }
+    function getCustomerSession() {
+        return activeSessions.find(s => s.accountId === currentAccountId && !s.ended);
+    }
+
+    // ---------- REQUEST SENDING ----------
+    function sendRequest(type, amount = 0, serviceDetail = "") {
+        let session = getCustomerSession();
+        if (!session && type !== 'top_up') { alert("No active session. Please order first."); return false; }
+        let requests = JSON.parse(localStorage.getItem(REQUESTS_KEY) || '[]');
+        let newReq = {
+            id: Date.now(),
+            type: type,
+            shishaId: session ? session.shishaId : null,
+            accountId: currentAccountId,
+            amount: amount,
+            serviceDetail: serviceDetail,
+            timestamp: new Date(),
+            status: 'pending'
+        };
+        requests.push(newReq);
+        localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
+        triggerStorage();
+        alert(`Request sent: ${type}. Staff will approve soon.`);
+        return true;
+    }
+
+    // ---------- CUSTOMER UI ----------
+    function updateCustomerUI() {
+        let session = getCustomerSession();
+        let balance = getWalletAccounts().find(a => a.id === currentAccountId)?.balance || 0;
+        document.getElementById('custWalletBalance').innerHTML = `R${balance.toFixed(2)}`;
+        let container = document.getElementById('custSessionInfo');
+        let timerDiv = document.getElementById('custTimerDisplay');
+        if (!session) {
+            container.innerHTML = "No active session. Order below.";
+            timerDiv.innerHTML = "";
+            return;
+        }
+        let mins = Math.floor(session.remainingTime / 60);
+        let secs = Math.floor(session.remainingTime % 60);
+        timerDiv.innerHTML = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        container.innerHTML = `<strong>${session.shishaId}</strong> | ${session.location} | 🍃 ${session.flavour}<br>Refills: ${session.refillCount || 0} | Total: R${session.amount}`;
+        if (session.paused) container.innerHTML += "<br><span style='color:orange'>⏸️ Session paused by staff</span>";
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    document.getElementById('customerPlaceOrderBtn').onclick = () => {
+        if (getCustomerSession()) { alert("You already have an active session."); return; }
+        let location = document.getElementById('orderLocation').value;
+        let flavour = document.getElementById('orderFlavour').value;
+        // Find first available shisha
+        let freeShisha = null;
+        for (let i=1;i<=30;i++) { let id = `SH-${String(i).padStart(3,'0')}`; if (!activeSessions.find(s => s.shishaId === id)) { freeShisha = id; break; } }
+        if (!freeShisha) { alert("No free shisha available."); return; }
+        let walletRes = deductFromWallet(currentAccountId, SESSION_PRICE, `New order ${freeShisha}`);
+        if (!walletRes.success) { alert(walletRes.error); return; }
+        let newSess = {
+            id: Date.now(), shishaId: freeShisha, location, flavour,
+            startTime: new Date(), lastRefillTime: new Date(), remainingTime: COAL_DURATION,
+            paymentMethod: `Rands Wallet (${currentAccountId})`, amount: SESSION_PRICE,
+            status: 'active', refillCount: 0, accountId: currentAccountId, paused: false
+        };
+        activeSessions.push(newSess);
+        saveSessions();
+        alert(`Session started at ${location} | Hookah ${freeShisha}`);
+        updateCustomerUI();
+    };
+
+    document.querySelectorAll('.request-action').forEach(btn => {
+        btn.addEventListener('click', () => {
+            let type = btn.dataset.req;
+            if (type === 'coal_refill') sendRequest('coal_refill', REFILL_PRICE);
+            else if (type === 'flavor_change') sendRequest('flavor_change', 50);
+            else if (type === 'extend_time') sendRequest('extend_time', 130);
+            else if (type === 'end_session') sendRequest('end_session');
+            else if (type === 'top_up') sendRequest('top_up', 0);
+        });
+    });
+
+    document.getElementById('custRefillBtn').onclick = () => { let amt = prompt("Amount to add (R)", "100"); if(amt) addToWallet(currentAccountId, parseFloat(amt), "Self refill"); updateCustomerUI(); };
+    document.getElementById('custHistoryBtn').onclick = () => { let tx = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}')[currentAccountId] || []; alert(tx.map(t=>`${t.desc} R${t.amount}`).join("\n") || "No transactions"); };
+    document.getElementById('custRewardsBtn').onclick = () => { alert("✨ 100 points per R1 spent. Earn free upgrades!"); };
+    document.getElementById('setAccountBtn').onclick = () => {
+        let newAcc = document.getElementById('customerAccountInput').value.trim();
+        if(newAcc) { currentAccountId = newAcc; ensureDemoAccount(); updateCustomerUI(); alert(`Switched to ${currentAccountId}`); }
+    };
+
+    // ---------- INIT & POLLING ----------
+    ensureDemoAccount();
+    loadSessions();
+    setInterval(updateTimers, 1000);
+    setInterval(loadSessions, 2000);
+    window.addEventListener('storage', () => loadSessions());
+</script>
+</body>
+</html>

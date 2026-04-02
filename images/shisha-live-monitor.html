@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Hookah TV Display | Shisha Premium Lounge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        body {
+            background: #1a1a2e;
+            padding: 20px;
+            color: white;
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* TV Dashboard Layout */
+        .tv-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            flex: 1;
+        }
+
+        .tv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d32f2f;
+        }
+
+        .title h1 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #d32f2f, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(211,47,47,0.3);
+        }
+        .title p {
+            font-size: 18px;
+            color: #ff9999;
+            letter-spacing: 2px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 25px;
+            background: rgba(0,0,0,0.6);
+            padding: 15px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff9800;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #ccc;
+        }
+        .live-clock {
+            font-size: 28px;
+            font-family: monospace;
+            background: #0f0f1a;
+            padding: 8px 20px;
+            border-radius: 40px;
+            letter-spacing: 2px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        /* Grid for hookahs */
+        .hookah-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .hookah-card {
+            background: #25253a;
+            border-radius: 28px;
+            padding: 20px 15px;
+            border-left: 8px solid #2e7d32;
+            transition: all 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .hookah-card.expired {
+            border-left-color: #b71c1c;
+            background: #3a2525;
+            animation: pulseRed 1s infinite;
+        }
+        .hookah-card.refill {
+            border-left-color: #ff9800;
+            background: #3a3225;
+        }
+        .hookah-card.paused {
+            border-left-color: #ffa500;
+            background: #3a2e25;
+            box-shadow: 0 0 15px rgba(255,165,0,0.3);
+        }
+        .hookah-card.available {
+            border-left-color: #2e7d32;
+            background: #1e2a2a;
+            opacity: 0.85;
+        }
+
+        @keyframes pulseRed {
+            0% { background: #3a2525; }
+            50% { background: #4a3535; }
+            100% { background: #3a2525; }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .hookah-id {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b6b;
+            letter-spacing: 1px;
+        }
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-badge.available { background: #2e7d32; color: white; }
+        .status-badge.inuse { background: #d32f2f; color: white; }
+        .status-badge.refill { background: #ff9800; color: #1e1e1e; }
+        .status-badge.expired { background: #b71c1c; color: white; animation: pulse 1s infinite; }
+        .status-badge.paused { background: #ffa500; color: #1e1e1e; }
+
+        /* Blinking pause icon */
+        .blinking-icon {
+            animation: blink 1.2s infinite;
+            margin-right: 6px;
+            font-size: 18px;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 18px;
+        }
+        .info-label {
+            color: #aaa;
+        }
+        .info-value {
+            font-weight: bold;
+            color: #fff;
+        }
+        .timer {
+            font-size: 36px;
+            font-family: monospace;
+            font-weight: bold;
+            text-align: center;
+            margin: 12px 0;
+            background: rgba(0,0,0,0.4);
+            padding: 10px;
+            border-radius: 20px;
+            letter-spacing: 4px;
+        }
+        .timer.negative {
+            color: #ff8888;
+            text-shadow: 0 0 5px rgba(255,0,0,0.5);
+        }
+        .refill .timer {
+            color: #ffaa66;
+            text-shadow: 0 0 3px rgba(255,170,0,0.5);
+        }
+        .expired .timer {
+            color: #ff6666;
+            text-shadow: 0 0 5px rgba(255,0,0,0.5);
+            animation: pulse 0.8s infinite;
+        }
+
+        /* Footer */
+        .tv-footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #d32f2f;
+            font-size: 14px;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+        .tv-footer span {
+            color: #ff9999;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .hookah-grid {
+                grid-template-columns: 1fr;
+            }
+            .tv-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .stats {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="tv-container">
+    <div class="tv-header">
+        <div class="title">
+            <h1>🔥 SHISHA PREMIUM LOUNGE</h1>
+            <p>✦ LIVE HOOKAH MONITOR ✦</p>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalActive">0</div>
+                <div class="stat-label">Active</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalRefill">0</div>
+                <div class="stat-label">Refill Soon</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalExpired">0</div>
+                <div class="stat-label">Expired</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalPaused">0</div>
+                <div class="stat-label">Paused</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalAvailable">0</div>
+                <div class="stat-label">Available</div>
+            </div>
+        </div>
+        <div class="live-clock" id="liveClock"></div>
+    </div>
+
+    <div id="hookahGrid" class="hookah-grid">
+        Loading hookah stations...
+    </div>
+</div>
+
+<div class="tv-footer">
+    Created by <span>Mziwonke KaBuyaphi</span>
+</div>
+
+<script>
+    // ---------- STORAGE KEYS ----------
+    const SESSIONS_KEY = 'shishaSessions';
+    const COAL_DURATION = 60;
+    const REFILL_THRESHOLD = 15;
+
+    let activeSessions = [];
+
+    // ---------- HELPERS ----------
+    function formatTime(seconds) {
+        const isNegative = seconds < 0;
+        const absSeconds = Math.abs(seconds);
+        const mins = Math.floor(absSeconds / 60);
+        const secs = Math.floor(absSeconds % 60);
+        const sign = isNegative ? '-' : '';
+        return `${sign}${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    }
+
+    function getStatusClass(session) {
+        if (!session) return 'available';
+        if (session.paused) return 'paused';
+        if (session.status === 'expired') return 'expired';
+        if (session.status === 'refill') return 'refill';
+        return 'inuse';
+    }
+
+    function getStatusText(session) {
+        if (!session) return 'AVAILABLE';
+        if (session.paused) return 'PAUSED';
+        if (session.status === 'expired') return 'EXPIRED';
+        if (session.status === 'refill') return 'REFILL SOON';
+        return 'IN USE';
+    }
+
+    function getStatusIcon(session) {
+        if (!session) return '';
+        if (session.paused) return '<i class="fas fa-pause-circle blinking-icon"></i>';
+        if (session.status === 'expired') return '<i class="fas fa-exclamation-triangle"></i>';
+        if (session.status === 'refill') return '<i class="fas fa-hourglass-half"></i>';
+        return '<i class="fas fa-fire"></i>';
+    }
+
+    function loadSessions() {
+        const saved = localStorage.getItem(SESSIONS_KEY);
+        if (saved) {
+            activeSessions = JSON.parse(saved).map(s => ({
+                ...s,
+                startTime: new Date(s.startTime),
+                lastRefillTime: new Date(s.lastRefillTime)
+            }));
+        } else {
+            activeSessions = [];
+        }
+        renderTV();
+    }
+
+    function updateTimers() {
+        let now = new Date();
+        let changed = false;
+        activeSessions.forEach(s => {
+            if (!s.paused) {
+                let elapsed = (now - s.lastRefillTime) / 1000;
+                let remain = COAL_DURATION - elapsed;
+                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
+                    s.remainingTime = remain;
+                    if (s.remainingTime <= 0) s.status = 'expired';
+                    else if (s.remainingTime <= REFILL_THRESHOLD) s.status = 'refill';
+                    else s.status = 'active';
+                    changed = true;
+                }
+            }
+        });
+        if (changed) {
+            localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
+            renderTV();
+        } else {
+            updateTimerDisplays();
+        }
+    }
+
+    function updateTimerDisplays() {
+        const cards = document.querySelectorAll('.hookah-card');
+        cards.forEach(card => {
+            const shishaId = card.getAttribute('data-shisha');
+            const session = activeSessions.find(s => s.shishaId === shishaId);
+            const timerSpan = card.querySelector('.timer-value');
+            if (timerSpan) {
+                if (session) {
+                    const remain = session.remainingTime;
+                    timerSpan.textContent = formatTime(remain);
+                    timerSpan.parentElement.classList.toggle('negative', remain < 0);
+                } else {
+                    timerSpan.textContent = '01:00';
+                    timerSpan.parentElement.classList.remove('negative');
+                }
+            }
+        });
+        updateStats();
+    }
+
+    function updateStats() {
+        let expired=0, refill=0, inuse=0, available=0, paused=0;
+        for (let i=1; i<=30; i++) {
+            const shId = `SH-${String(i).padStart(3,'0')}`;
+            const s = activeSessions.find(s => s.shishaId === shId);
+            if (!s) available++;
+            else if (s.paused) paused++;
+            else if (s.status === 'expired') expired++;
+            else if (s.status === 'refill') refill++;
+            else inuse++;
+        }
+        document.getElementById('totalActive').innerText = inuse;
+        document.getElementById('totalRefill').innerText = refill;
+        document.getElementById('totalExpired').innerText = expired;
+        document.getElementById('totalPaused').innerText = paused;
+        document.getElementById('totalAvailable').innerText = available;
+    }
+
+    function renderTV() {
+        const container = document.getElementById('hookahGrid');
+        let html = '';
+        for (let i = 1; i <= 30; i++) {
+            const shishaId = `SH-${String(i).padStart(3,'0')}`;
+            const session = activeSessions.find(s => s.shishaId === shishaId);
+            const statusClass = getStatusClass(session);
+            const statusText = getStatusText(session);
+            const statusIcon = getStatusIcon(session);
+            let timerDisplay = '01:00';
+            let flavour = '-', location = '-', total = '0';
+            let isNegative = false;
+            if (session) {
+                flavour = session.flavour;
+                location = session.location;
+                total = `R${session.amount}`;
+                timerDisplay = formatTime(session.remainingTime);
+                isNegative = session.remainingTime < 0;
+            }
+            html += `
+                <div class="hookah-card ${statusClass}" data-shisha="${shishaId}">
+                    <div class="card-header">
+                        <div class="hookah-id">${shishaId}</div>
+                        <div class="status-badge ${statusClass}">
+                            ${statusIcon} ${statusText}
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">📍 Location</span>
+                        <span class="info-value">${location}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">🍃 Flavour</span>
+                        <span class="info-value">${flavour}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">💰 Total</span>
+                        <span class="info-value">${total}</span>
+                    </div>
+                    <div class="timer ${isNegative ? 'negative' : ''}">
+                        ⏱️ <span class="timer-value">${timerDisplay}</span>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        updateStats();
+    }
+
+    // Clock update
+    function updateClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-ZA', { hour12: false });
+        document.getElementById('liveClock').innerText = timeStr;
+    }
+
+    // Auto-refresh from storage events
+    function storageEventHandler(e) {
+        if (e.key === SESSIONS_KEY) {
+            loadSessions();
+        }
+    }
+
+    // Initialize
+    function init() {
+        loadSessions();
+        updateClock();
+        setInterval(updateClock, 1000);
+        setInterval(updateTimers, 1000);
+        window.addEventListener('storage', storageEventHandler);
+    }
+
+    init();
+</script>
+</body>
+</html>

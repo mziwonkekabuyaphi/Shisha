@@ -70,9 +70,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
             border: 1px solid #eee;
         }
-        .grid-3 {
+        .grid-2 {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
         .btn-icon {
@@ -97,35 +97,111 @@
             transform: scale(0.97);
         }
         .order-btn {
-            background: #d32f2f;
+            background: linear-gradient(135deg, #d32f2f, #ff4444);
             color: white;
             text-align: center;
-            padding: 14px;
-            border-radius: 40px;
+            padding: 16px;
+            border-radius: 50px;
             font-weight: bold;
             margin-top: 12px;
             cursor: pointer;
+            transition: 0.2s;
+            font-size: 18px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(211,47,47,0.3);
+        }
+        .order-btn:hover {
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(211,47,47,0.4);
         }
         .timer {
-            font-size: 28px;
+            font-size: 36px;
             font-weight: 800;
             font-family: monospace;
-            color: #d32f2f;
             text-align: center;
             margin: 12px 0;
+            letter-spacing: 4px;
         }
+        .timer.positive {
+            color: #d32f2f;
+        }
+        .timer.negative {
+            color: #ff8888;
+            text-shadow: 0 0 5px rgba(255,0,0,0.3);
+            animation: pulseRed 0.8s infinite;
+        }
+        @keyframes pulseRed {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        /* Coal Level Indicator Styles */
+        .coal-container {
+            background: #2c2c2c;
+            border-radius: 40px;
+            padding: 12px 16px;
+            margin: 15px 0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .coal-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #ffaa66;
+        }
+        .coal-bar-bg {
+            background: #3a3a3a;
+            border-radius: 30px;
+            height: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+        }
+        .coal-bar-fill {
+            width: 100%;
+            height: 100%;
+            border-radius: 30px;
+            transition: width 0.3s ease;
+            background: linear-gradient(90deg, #ff6b35, #ff4500);
+            box-shadow: 0 0 8px rgba(255,69,0,0.5);
+            position: relative;
+        }
+        .coal-bar-fill::after {
+            content: "🔥";
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        .coal-status {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .coal-status.critical {
+            color: #ff4444;
+            animation: pulseText 0.8s infinite;
+        }
+        .coal-status.warning {
+            color: #ff9800;
+        }
+        .coal-status.good {
+            color: #4caf50;
+        }
+        @keyframes pulseText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
         .flex-between {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        .badge {
-            background: #fef2f2;
-            color: #b91c1c;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: bold;
         }
         select, input {
             width: 100%;
@@ -140,10 +216,131 @@
             text-align: center;
             margin-top: 8px;
         }
-        hr {
-            margin: 16px 0;
+        .status-paused {
+            background: #ffa50020;
+            border-left: 3px solid #ffa500;
+            padding: 8px;
+            border-radius: 12px;
+            margin-top: 8px;
+        }
+        .expired-warning {
+            background: #ffebee;
+            border-left: 3px solid #d32f2f;
+            padding: 8px;
+            border-radius: 12px;
+            margin-top: 8px;
+            color: #b71c1c;
+            font-weight: bold;
+        }
+        
+        /* Beautiful Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-container {
+            background: white;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 380px;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+        .modal-header {
+            padding: 20px 24px 12px 24px;
+            text-align: center;
+        }
+        .modal-icon {
+            font-size: 52px;
+            margin-bottom: 12px;
+        }
+        .modal-icon.success { color: #2e7d32; }
+        .modal-icon.error { color: #d32f2f; }
+        .modal-icon.warning { color: #ff9800; }
+        .modal-icon.info { color: #2196f3; }
+        .modal-icon.question { color: #ff9800; }
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e1e2a;
+            margin-bottom: 8px;
+        }
+        .modal-message {
+            padding: 0 24px;
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+            text-align: center;
+            white-space: pre-line;
+        }
+        .modal-input {
+            margin: 16px 24px;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 40px;
+            font-size: 15px;
+            width: calc(100% - 48px);
+        }
+        .modal-input:focus {
+            outline: none;
+            border-color: #d32f2f;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px 24px 24px 24px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
             border: none;
-            border-top: 1px solid #f0f0f0;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-btn.primary {
+            background: #d32f2f;
+            color: white;
+        }
+        .modal-btn.primary:hover {
+            background: #b71c1c;
+        }
+        .modal-btn.secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .modal-btn.secondary:hover {
+            background: #ccc;
+        }
+        .modal-btn.confirm {
+            background: #2e7d32;
+            color: white;
+        }
+        .modal-btn.confirm:hover {
+            background: #1b5e20;
         }
     </style>
 </head>
@@ -163,23 +360,38 @@
         <div><strong>💰 My Wallet Balance</strong></div>
         <div><span id="custWalletBalance">R0.00</span></div>
     </div>
-    <div class="grid-3" style="margin-top: 10px;">
-        <div class="btn-icon" id="custRefillBtn"><i class="fa fa-plus-circle"></i> Refill</div>
-        <div class="btn-icon" id="custHistoryBtn"><i class="fa fa-history"></i> History</div>
-        <div class="btn-icon" id="custRewardsBtn"><i class="fa fa-gift"></i> Rewards</div>
+    <div class="grid-2" style="margin-top: 10px;">
+        <div class="btn-icon" id="custRefillBtn"><i class="fa fa-plus-circle"></i> Refill Wallet</div>
+        <div class="btn-icon" id="custHistoryBtn"><i class="fa fa-history"></i> Puff History</div>
     </div>
 </div>
 
 <div class="card" id="custActiveSessionCard">
     <h3>🔥 My Hookah Session</h3>
     <div id="custSessionInfo">No active session. Order below.</div>
-    <div id="custTimerDisplay" class="timer"></div>
-    <div class="grid-3" id="custRequestButtons" style="margin-top: 12px;">
+    <div id="custTimerDisplay" class="timer positive">00:00</div>
+    
+    <!-- COAL LEVEL INDICATOR -->
+    <div id="coalIndicator" style="display: none;">
+        <div class="coal-container">
+            <div class="coal-label">
+                <span><i class="fa fa-fire"></i> Coal Health</span>
+                <span id="coalPercentage">100%</span>
+            </div>
+            <div class="coal-bar-bg">
+                <div class="coal-bar-fill" id="coalFill" style="width: 100%;"></div>
+            </div>
+            <div class="coal-status" id="coalStatus">🔥 Coal is fresh!</div>
+        </div>
+    </div>
+    
+    <div id="pauseStatusMsg" style="font-size:13px; text-align:center; margin-bottom:10px;"></div>
+    <div class="grid-3" id="custRequestButtons" style="margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
         <div class="btn-icon request-action" data-req="coal_refill"><i class="fa fa-fire"></i> Coal Refill</div>
         <div class="btn-icon request-action" data-req="flavor_change"><i class="fa fa-leaf"></i> Change Flavor</div>
         <div class="btn-icon request-action" data-req="extend_time"><i class="fa fa-clock"></i> Extend 30min</div>
         <div class="btn-icon request-action" data-req="end_session"><i class="fa fa-stop"></i> End Session</div>
-        <div class="btn-icon request-action" data-req="top_up"><i class="fa fa-wallet"></i> Top-up Wallet</div>
+        <div class="btn-icon request-action" data-req="pause_session"><i class="fa fa-pause-circle"></i> Pause Session</div>
     </div>
 </div>
 
@@ -198,18 +410,143 @@
         <option value="Apple">Apple</option>
         <option value="Berry with Mint">Berry with Mint</option>
         <option value="Bombay Pan Masala">Bombay Pan Masala</option>
+        <option value="Blueberry">Blueberry</option>
+        <option value="Watermelon">Watermelon</option>
     </select>
-    <div class="order-btn" id="customerPlaceOrderBtn">Start Session - R260 (Pay with Wallet)</div>
-    <div class="small-text">💳 Your wallet will be charged if enough balance</div>
+    <div class="order-btn" id="customerPlaceOrderBtn">💨 Smoke Now - R260</div>
+    <div class="small-text">💳 Payment will be deducted from your wallet balance</div>
+</div>
+
+<!-- Beautiful Modal -->
+<div id="beautifulModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-icon" id="modalIcon">📢</div>
+            <div class="modal-title" id="modalTitle">Notification</div>
+        </div>
+        <div class="modal-message" id="modalMessage">Message here</div>
+        <input type="text" id="modalInputField" class="modal-input" style="display: none;" placeholder="Enter value">
+        <div class="modal-buttons" id="modalButtons">
+            <button class="modal-btn primary" id="modalOkBtn">OK</button>
+            <button class="modal-btn secondary" id="modalCancelBtn" style="display: none;">Cancel</button>
+        </div>
+    </div>
 </div>
 
 <script>
+    // ============ BEAUTIFUL MODAL SYSTEM ============
+    let modalResolve = null;
+    
+    function showModal(options) {
+        return new Promise((resolve) => {
+            modalResolve = resolve;
+            const modal = document.getElementById('beautifulModal');
+            const icon = document.getElementById('modalIcon');
+            const title = document.getElementById('modalTitle');
+            const message = document.getElementById('modalMessage');
+            const inputField = document.getElementById('modalInputField');
+            const okBtn = document.getElementById('modalOkBtn');
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            
+            icon.className = 'modal-icon';
+            if (options.type === 'success') {
+                icon.innerHTML = '<i class="fa fa-check-circle"></i>';
+                icon.classList.add('success');
+            } else if (options.type === 'error') {
+                icon.innerHTML = '<i class="fa fa-times-circle"></i>';
+                icon.classList.add('error');
+            } else if (options.type === 'warning') {
+                icon.innerHTML = '<i class="fa fa-exclamation-triangle"></i>';
+                icon.classList.add('warning');
+            } else if (options.type === 'question') {
+                icon.innerHTML = '<i class="fa fa-question-circle"></i>';
+                icon.classList.add('question');
+            } else {
+                icon.innerHTML = '<i class="fa fa-info-circle"></i>';
+                icon.classList.add('info');
+            }
+            
+            title.innerText = options.title || 'Notification';
+            message.innerText = options.message || '';
+            
+            if (options.input) {
+                inputField.style.display = 'block';
+                inputField.placeholder = options.placeholder || 'Enter value';
+                inputField.value = options.defaultValue || '';
+            } else {
+                inputField.style.display = 'none';
+            }
+            
+            if (options.showCancel) {
+                cancelBtn.style.display = 'block';
+                cancelBtn.innerText = options.cancelText || 'Cancel';
+            } else {
+                cancelBtn.style.display = 'none';
+            }
+            
+            okBtn.innerText = options.okText || 'OK';
+            if (options.type === 'question') {
+                okBtn.classList.remove('primary');
+                okBtn.classList.add('confirm');
+            } else {
+                okBtn.classList.remove('confirm');
+                okBtn.classList.add('primary');
+            }
+            
+            const newOkBtn = okBtn.cloneNode(true);
+            okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            newOkBtn.onclick = () => {
+                modal.classList.remove('active');
+                if (options.input) {
+                    resolve(inputField.value);
+                } else {
+                    resolve(true);
+                }
+            };
+            
+            if (options.showCancel) {
+                newCancelBtn.onclick = () => {
+                    modal.classList.remove('active');
+                    resolve(false);
+                };
+            }
+            
+            modal.classList.add('active');
+        });
+    }
+    
+    async function showAlert(message, title = 'Notification', type = 'info') {
+        await showModal({ message, title, type, showCancel: false });
+    }
+    
+    async function showConfirm(message, title = 'Confirm', okText = 'Confirm') {
+        return await showModal({ message, title, type: 'question', showCancel: true, okText });
+    }
+    
+    async function showPrompt(message, title = 'Input Required', placeholder = 'Enter value', defaultValue = '') {
+        return await showModal({ 
+            message, 
+            title, 
+            type: 'info', 
+            showCancel: true, 
+            okText: 'Submit',
+            input: true,
+            placeholder,
+            defaultValue
+        });
+    }
+    
+    // ============ APP LOGIC ============
     const WALLET_ACCOUNTS_KEY = 'rands_accounts_v2';
     const WALLET_TX_KEY = 'rands_transactions';
     const SESSIONS_KEY = 'shishaSessions';
     const REQUESTS_KEY = 'customerRequests';
     const SESSION_PRICE = 260;
     const REFILL_PRICE = 260;
+    const EXTEND_PRICE = 130;
     const COAL_DURATION = 60;
 
     let activeSessions = [];
@@ -227,7 +564,7 @@
         let accounts = getWalletAccounts();
         let idx = accounts.findIndex(a => a.id === accountId);
         if (idx === -1) return { success: false, error: "Account not found" };
-        if (accounts[idx].balance < amount) return { success: false, error: "Insufficient balance" };
+        if (accounts[idx].balance < amount) return { success: false, error: `Insufficient balance. Available: R${accounts[idx].balance.toFixed(2)}` };
         accounts[idx].balance -= amount;
         saveWalletAccounts(accounts);
         addTransaction(accountId, reason, -amount);
@@ -263,12 +600,85 @@
     }
 
     function getCustomerSession() {
-        return activeSessions.find(s => s.accountId === currentAccountId && !s.ended);
+        return activeSessions.find(s => s.accountId === currentAccountId);
     }
 
-    function sendRequest(type, amount = 0, serviceDetail = "") {
+    function formatTimeWithNegative(seconds) {
+        const isNegative = seconds < 0;
+        const absSeconds = Math.abs(seconds);
+        const mins = Math.floor(absSeconds / 60);
+        const secs = Math.floor(absSeconds % 60);
+        const sign = isNegative ? '-' : '';
+        return `${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    // Update coal level UI based on remaining time percentage
+    function updateCoalLevel(remainingSeconds) {
+        const coalIndicator = document.getElementById('coalIndicator');
+        if (!coalIndicator) return;
+        
+        if (remainingSeconds === null || remainingSeconds === undefined) {
+            coalIndicator.style.display = 'none';
+            return;
+        }
+        
+        coalIndicator.style.display = 'block';
+        
+        // Calculate percentage (cap between 0 and 100)
+        let percentage = (remainingSeconds / COAL_DURATION) * 100;
+        percentage = Math.min(100, Math.max(0, percentage));
+        
+        const coalFill = document.getElementById('coalFill');
+        const coalPercentageSpan = document.getElementById('coalPercentage');
+        const coalStatusSpan = document.getElementById('coalStatus');
+        
+        if (coalFill) coalFill.style.width = `${percentage}%`;
+        if (coalPercentageSpan) coalPercentageSpan.innerText = `${Math.floor(percentage)}%`;
+        
+        // Update color and status message based on coal level
+        if (coalStatusSpan) {
+            if (percentage <= 0) {
+                coalStatusSpan.innerHTML = '💀 Coal is DEAD! Request refill immediately!';
+                coalStatusSpan.className = 'coal-status critical';
+                coalFill.style.background = 'linear-gradient(90deg, #666, #444)';
+            } else if (percentage <= 20) {
+                coalStatusSpan.innerHTML = '⚠️ Coal is dying! Need refill soon!';
+                coalStatusSpan.className = 'coal-status critical';
+                coalFill.style.background = 'linear-gradient(90deg, #ff4444, #cc0000)';
+            } else if (percentage <= 40) {
+                coalStatusSpan.innerHTML = '🟠 Coal is low - time to think about refill';
+                coalStatusSpan.className = 'coal-status warning';
+                coalFill.style.background = 'linear-gradient(90deg, #ff8844, #ff5500)';
+            } else if (percentage <= 70) {
+                coalStatusSpan.innerHTML = '🟡 Coal is getting warm - still good';
+                coalStatusSpan.className = 'coal-status warning';
+                coalFill.style.background = 'linear-gradient(90deg, #ffaa44, #ff7700)';
+            } else {
+                coalStatusSpan.innerHTML = '🔥 Coal is fresh and hot! Enjoy your session!';
+                coalStatusSpan.className = 'coal-status good';
+                coalFill.style.background = 'linear-gradient(90deg, #ff6b35, #ff4500)';
+            }
+        }
+    }
+
+    async function sendRequest(type, amount = 0, serviceDetail = "") {
         let session = getCustomerSession();
-        if (!session && type !== 'top_up') { alert("No active session. Please order first."); return false; }
+        
+        if (type !== 'pause_session' && !session) { 
+            await showAlert("No active session. Please order first.", "No Session", "warning");
+            return false; 
+        }
+        
+        if (type === 'pause_session' && !session) {
+            await showAlert("No active session to pause.", "No Session", "warning");
+            return false;
+        }
+        
+        if (type === 'pause_session' && session && session.paused) {
+            await showAlert("Your session is already paused. Please wait for staff to resume.", "Already Paused", "warning");
+            return false;
+        }
+        
         let requests = JSON.parse(localStorage.getItem(REQUESTS_KEY) || '[]');
         let newReq = {
             id: Date.now(),
@@ -277,13 +687,22 @@
             accountId: currentAccountId,
             amount: amount,
             serviceDetail: serviceDetail,
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
             status: 'pending'
         };
         requests.push(newReq);
         localStorage.setItem(REQUESTS_KEY, JSON.stringify(requests));
         triggerStorage();
-        alert(`Request sent: ${type}. Staff will approve soon.`);
+        
+        let msg = "";
+        let title = "Request Sent";
+        if (type === 'pause_session') msg = "⏸️ Pause request sent to staff. They will approve it shortly.";
+        else if (type === 'coal_refill') msg = "🔥 Coal refill request sent to staff.";
+        else if (type === 'flavor_change') msg = `🍃 Flavor change to "${serviceDetail}" request sent to staff.`;
+        else if (type === 'extend_time') msg = "⏰ Time extension request sent to staff.";
+        else if (type === 'end_session') msg = "❌ End session request sent to staff.";
+        
+        await showAlert(msg, title, "success");
         return true;
     }
 
@@ -293,68 +712,172 @@
         document.getElementById('custWalletBalance').innerHTML = `R${balance.toFixed(2)}`;
         let container = document.getElementById('custSessionInfo');
         let timerDiv = document.getElementById('custTimerDisplay');
+        let pauseMsgDiv = document.getElementById('pauseStatusMsg');
+        
         if (!session) {
             container.innerHTML = "No active session. Order below.";
-            timerDiv.innerHTML = "";
+            timerDiv.innerHTML = "00:00";
+            timerDiv.className = "timer positive";
+            pauseMsgDiv.innerHTML = "";
+            updateCoalLevel(null);
             return;
         }
-        let mins = Math.floor(session.remainingTime / 60);
-        let secs = Math.floor(session.remainingTime % 60);
-        timerDiv.innerHTML = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-        container.innerHTML = `<strong>${session.shishaId}</strong> | ${session.location} | 🍃 ${session.flavour}<br>Refills: ${session.refillCount || 0} | Total: R${session.amount}`;
-        if (session.paused) container.innerHTML += "<br><span style='color:orange'>⏸️ Session paused by staff</span>";
+        
+        let timeString = formatTimeWithNegative(session.remainingTime);
+        timerDiv.innerHTML = timeString;
+        
+        // Update coal level based on remaining time (only show if positive or we want to show dead coal)
+        updateCoalLevel(Math.max(0, session.remainingTime));
+        
+        if (session.remainingTime < 0) {
+            timerDiv.className = "timer negative";
+        } else {
+            timerDiv.className = "timer positive";
+        }
+        
+        let statusHtml = `<strong>${session.shishaId}</strong> | ${session.location} | 🍃 ${session.flavour}<br>Refills: ${session.refillCount || 0} | Total: R${session.amount}`;
+        
+        if (session.paused) {
+            statusHtml += `<div class="status-paused"><i class="fa fa-pause-circle"></i> ⏸️ Session PAUSED by staff. Time is frozen.</div>`;
+            pauseMsgDiv.innerHTML = '<span style="color:#ff9800;"><i class="fa fa-hourglass-half"></i> Session paused - timer stopped</span>';
+        } else {
+            pauseMsgDiv.innerHTML = '';
+            if (session.remainingTime <= 15 && session.remainingTime > 0) {
+                statusHtml += `<div style="color:#ff9800; margin-top:6px;"><i class="fa fa-exclamation-triangle"></i> ⚠️ Coal running low! Request refill.</div>`;
+            } else if (session.remainingTime <= 0) {
+                statusHtml += `<div class="expired-warning"><i class="fa fa-skull-crossbones"></i> ⏰ Session EXPIRED! Coal is dead. Please end session or request refill.</div>`;
+            }
+        }
+        
+        container.innerHTML = statusHtml;
     }
 
-    document.getElementById('customerPlaceOrderBtn').onclick = () => {
-        if (getCustomerSession()) { alert("You already have an active session."); return; }
+    document.getElementById('customerPlaceOrderBtn').onclick = async () => {
+        if (getCustomerSession()) { 
+            await showAlert("You already have an active session. End current session first.", "Active Session", "warning");
+            return; 
+        }
         let location = document.getElementById('orderLocation').value;
         let flavour = document.getElementById('orderFlavour').value;
+        
         let freeShisha = null;
-        for (let i=1;i<=30;i++) { let id = `SH-${String(i).padStart(3,'0')}`; if (!activeSessions.find(s => s.shishaId === id)) { freeShisha = id; break; } }
-        if (!freeShisha) { alert("No free shisha available."); return; }
-        let walletRes = deductFromWallet(currentAccountId, SESSION_PRICE, `New order ${freeShisha}`);
-        if (!walletRes.success) { alert(walletRes.error); return; }
+        for (let i=1;i<=30;i++) { 
+            let id = `SH-${String(i).padStart(3,'0')}`; 
+            if (!activeSessions.find(s => s.shishaId === id)) { 
+                freeShisha = id; 
+                break; 
+            } 
+        }
+        if (!freeShisha) { 
+            await showAlert("No free hookah available. Please wait.", "Fully Booked", "warning");
+            return; 
+        }
+        
+        let confirmed = await showConfirm(`💨 Start your session?\n\n📍 Location: ${location}\n🍃 Flavour: ${flavour}\n🆔 Hookah: ${freeShisha}\n💰 Price: R${SESSION_PRICE}`, "Smoke Now");
+        if (!confirmed) return;
+        
+        let walletRes = deductFromWallet(currentAccountId, SESSION_PRICE, `New order ${freeShisha} (${location})`);
+        if (!walletRes.success) { 
+            await showAlert(walletRes.error, "Payment Failed", "error");
+            return; 
+        }
+        
         let newSess = {
-            id: Date.now(), shishaId: freeShisha, location, flavour,
-            startTime: new Date(), lastRefillTime: new Date(), remainingTime: COAL_DURATION,
-            paymentMethod: `Rands Wallet (${currentAccountId})`, amount: SESSION_PRICE,
-            status: 'active', refillCount: 0, accountId: currentAccountId, paused: false
+            id: Date.now(), 
+            shishaId: freeShisha, 
+            location, 
+            flavour,
+            startTime: new Date(), 
+            lastRefillTime: new Date(), 
+            remainingTime: COAL_DURATION,
+            paymentMethod: `Rands Wallet (${currentAccountId})`, 
+            amount: SESSION_PRICE,
+            status: 'active', 
+            refillCount: 0, 
+            accountId: currentAccountId, 
+            paused: false,
+            ended: false
         };
         activeSessions.push(newSess);
         saveSessions();
-        alert(`Session started at ${location} | Hookah ${freeShisha}`);
+        await showAlert(`✅ Session started successfully!\n\nHookah: ${freeShisha}\nLocation: ${location}\nFlavour: ${flavour}\n💰 New balance: R${walletRes.newBalance.toFixed(2)}\n\n⏱️ Your 60 minute session begins now!`, "Success", "success");
         updateCustomerUI();
     };
 
     document.querySelectorAll('.request-action').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             let type = btn.dataset.req;
-            if (type === 'coal_refill') sendRequest('coal_refill', REFILL_PRICE);
-            else if (type === 'flavor_change') sendRequest('flavor_change', 50);
-            else if (type === 'extend_time') sendRequest('extend_time', 130);
-            else if (type === 'end_session') sendRequest('end_session');
-            else if (type === 'top_up') sendRequest('top_up', 0);
+            if (type === 'coal_refill') {
+                let confirmed = await showConfirm(`Request coal refill for R${REFILL_PRICE}? This will reset the timer to 60:00 and refresh your coal!`, "Confirm Refill");
+                if (confirmed) sendRequest('coal_refill', REFILL_PRICE, 'Coal refill request');
+            }
+            else if (type === 'flavor_change') {
+                let newFlavor = await showPrompt("Enter new flavor:", "Change Flavor", "e.g., Mint+Grape, Blueberry", "Mint+Grape");
+                if (newFlavor && newFlavor.trim()) sendRequest('flavor_change', 50, newFlavor.trim());
+            }
+            else if (type === 'extend_time') {
+                let confirmed = await showConfirm(`Extend session by 30 minutes for R${EXTEND_PRICE}?`, "Extend Session");
+                if (confirmed) sendRequest('extend_time', EXTEND_PRICE, 'Time extension 30min');
+            }
+            else if (type === 'end_session') {
+                let confirmed = await showConfirm("Request to end your session?", "End Session", "Yes, End");
+                if (confirmed) sendRequest('end_session', 0, 'End session request');
+            }
+            else if (type === 'pause_session') {
+                let session = getCustomerSession();
+                if (!session) {
+                    await showAlert("No active session to pause.", "No Session", "warning");
+                    return;
+                }
+                if (session.paused) {
+                    await showAlert("Session is already paused. Staff will resume it.", "Already Paused", "warning");
+                    return;
+                }
+                let confirmed = await showConfirm("Request to PAUSE your session? Timer will freeze. Staff will approve.", "Pause Session", "Request Pause");
+                if (confirmed) sendRequest('pause_session', 0, 'Pause session request');
+            }
         });
     });
 
-    document.getElementById('custRefillBtn').onclick = () => { let amt = prompt("Amount to add (R)", "100"); if(amt) addToWallet(currentAccountId, parseFloat(amt), "Self refill"); updateCustomerUI(); };
-    document.getElementById('custHistoryBtn').onclick = () => { let tx = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}')[currentAccountId] || []; alert(tx.map(t=>`${t.desc} R${t.amount}`).join("\n") || "No transactions"); };
-    document.getElementById('custRewardsBtn').onclick = () => { alert("✨ 100 points per R1 spent. Earn free upgrades!"); };
-    document.getElementById('setAccountBtn').onclick = () => {
+    document.getElementById('custRefillBtn').onclick = async () => { 
+        let amt = await showPrompt("Enter amount to add to wallet (R)", "Refill Wallet", "Amount in Rands", "100");
+        if (amt && !isNaN(parseFloat(amt)) && parseFloat(amt) > 0) {
+            addToWallet(currentAccountId, parseFloat(amt), "Self wallet refill");
+            updateCustomerUI();
+            await showAlert(`✅ Successfully added R${parseFloat(amt).toFixed(2)} to your wallet!`, "Refill Success", "success");
+        } else if (amt) {
+            await showAlert("Please enter a valid amount.", "Invalid Amount", "error");
+        }
+    };
+    
+    document.getElementById('custHistoryBtn').onclick = async () => { 
+        let tx = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}')[currentAccountId] || []; 
+        if(tx.length === 0) {
+            await showAlert("No puff history found for this account.", "Puff History", "info");
+        } else {
+            let historyText = tx.slice(0,10).map(t => `${t.desc}: R${Math.abs(t.amount).toFixed(2)}`).join("\n");
+            await showAlert(historyText, "📜 Puff History (Last 10)", "info");
+        }
+    };
+    
+    document.getElementById('setAccountBtn').onclick = async () => {
         let newAcc = document.getElementById('customerAccountInput').value.trim();
-        if(newAcc) { currentAccountId = newAcc; ensureDemoAccount(); updateCustomerUI(); alert(`Switched to ${currentAccountId}`); }
+        if(newAcc) { 
+            currentAccountId = newAcc; 
+            ensureDemoAccount(); 
+            loadSessions();
+            await showAlert(`✅ Switched to account: ${currentAccountId}`, "Account Changed", "success");
+        }
     };
 
-    ensureDemoAccount();
-    loadSessions();
-    setInterval(() => {
+    function updateTimersAndStatus() {
         let changed = false;
         let now = new Date();
         activeSessions.forEach(s => {
-            if (!s.paused && s.accountId === currentAccountId) {
+            if (!s.paused) {
                 let elapsed = (now - s.lastRefillTime) / 1000;
                 let remain = COAL_DURATION - elapsed;
-                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
+                if (Math.abs(s.remainingTime - remain) > 0.3) {
                     s.remainingTime = remain;
                     if (s.remainingTime <= 0) s.status = 'expired';
                     else if (s.remainingTime <= 15) s.status = 'refill';
@@ -363,10 +886,17 @@
                 }
             }
         });
-        if (changed) saveSessions();
-        else updateCustomerUI();
-    }, 1000);
-    setInterval(loadSessions, 2000);
+        if (changed) {
+            localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
+            triggerStorage();
+        }
+        updateCustomerUI();
+    }
+
+    ensureDemoAccount();
+    loadSessions();
+    setInterval(updateTimersAndStatus, 1000);
+    setInterval(() => loadSessions(), 2000);
     window.addEventListener('storage', () => loadSessions());
 </script>
 </body>

@@ -24,13 +24,32 @@
             padding: 20px 24px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        .app-header h1 {
+        .header-logo {
+            flex-shrink: 0;
+        }
+        .header-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .header-text {
+            flex: 1;
+        }
+        .header-text h1 {
             font-size: 28px;
             letter-spacing: 2px;
             margin-bottom: 6px;
         }
-        .app-header p {
+        .header-text p {
             font-size: 13px;
             opacity: 0.9;
         }
@@ -342,17 +361,33 @@
         .modal-btn.confirm:hover {
             background: #1b5e20;
         }
+        
+        @media (max-width: 550px) {
+            .header-logo img {
+                width: 45px;
+                height: 45px;
+            }
+            .header-text h1 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="app-header">
-    <h1>🍃 SHISHA PREMIUM LOUNGE</h1>
-    <p>✦ Customer Portal ✦</p>
-    <div class="account-bar">
-        <span style="font-size:14px;">👤 My Account (Phone)</span>
-        <input type="text" id="customerAccountInput" placeholder="+27812345678" value="+27812345678">
-        <button id="setAccountBtn">Set / Refresh</button>
+    <div class="header-logo">
+        <img src="images/rands-logo2.png" alt="Rands Lounge Logo" onerror="this.src='https://via.placeholder.com/60x60?text=Rands'; this.onerror=null;">
     </div>
+    <div class="header-text">
+        <h1>🍃 SHISHA PREMIUM LOUNGE</h1>
+        <p>✦ Customer Portal ✦</p>
+    </div>
+</div>
+
+<div class="account-bar" style="margin-bottom: 20px;">
+    <span style="font-size:14px;">👤 My Account (Phone)</span>
+    <input type="text" id="customerAccountInput" placeholder="+27812345678" value="+27812345678">
+    <button id="setAccountBtn">Set / Refresh</button>
 </div>
 
 <div class="card">
@@ -850,13 +885,14 @@
         }
     };
     
+    // Puff History button - shows "Recent smoking activity" as modal title
     document.getElementById('custHistoryBtn').onclick = async () => { 
         let tx = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}')[currentAccountId] || []; 
         if(tx.length === 0) {
-            await showAlert("No puff history found for this account.", "Puff History", "info");
+            await showAlert("No puff history found for this account.", "Recent smoking activity", "info");
         } else {
             let historyText = tx.slice(0,10).map(t => `${t.desc}: R${Math.abs(t.amount).toFixed(2)}`).join("\n");
-            await showAlert(historyText, "📜 Puff History (Last 10)", "info");
+            await showAlert(historyText, "📜 Recent smoking activity", "info");
         }
     };
     

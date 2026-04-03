@@ -23,7 +23,6 @@
             min-height: 100vh;
         }
 
-        /* TV Dashboard Layout */
         .tv-container {
             max-width: 1920px;
             margin: 0 auto;
@@ -87,7 +86,6 @@
             box-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
-        /* Grid for hookahs */
         .hookah-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -158,7 +156,6 @@
         .status-badge.expired { background: #b71c1c; color: white; animation: pulse 1s infinite; }
         .status-badge.paused { background: #ffa500; color: #1e1e1e; }
 
-        /* Blinking pause icon */
         .blinking-icon {
             animation: blink 1.2s infinite;
             margin-right: 6px;
@@ -213,7 +210,6 @@
             animation: pulse 0.8s infinite;
         }
 
-        /* Footer */
         .tv-footer {
             text-align: center;
             padding: 20px;
@@ -284,14 +280,12 @@
 </div>
 
 <script>
-    // ---------- STORAGE KEYS ----------
     const SESSIONS_KEY = 'shishaSessions';
     const COAL_DURATION = 60;
     const REFILL_THRESHOLD = 15;
 
     let activeSessions = [];
 
-    // ---------- HELPERS ----------
     function formatTime(seconds) {
         const isNegative = seconds < 0;
         const absSeconds = Math.abs(seconds);
@@ -337,68 +331,6 @@
             activeSessions = [];
         }
         renderTV();
-    }
-
-    function updateTimers() {
-        let now = new Date();
-        let changed = false;
-        activeSessions.forEach(s => {
-            if (!s.paused) {
-                let elapsed = (now - s.lastRefillTime) / 1000;
-                let remain = COAL_DURATION - elapsed;
-                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
-                    s.remainingTime = remain;
-                    if (s.remainingTime <= 0) s.status = 'expired';
-                    else if (s.remainingTime <= REFILL_THRESHOLD) s.status = 'refill';
-                    else s.status = 'active';
-                    changed = true;
-                }
-            }
-        });
-        if (changed) {
-            localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
-            renderTV();
-        } else {
-            updateTimerDisplays();
-        }
-    }
-
-    function updateTimerDisplays() {
-        const cards = document.querySelectorAll('.hookah-card');
-        cards.forEach(card => {
-            const shishaId = card.getAttribute('data-shisha');
-            const session = activeSessions.find(s => s.shishaId === shishaId);
-            const timerSpan = card.querySelector('.timer-value');
-            if (timerSpan) {
-                if (session) {
-                    const remain = session.remainingTime;
-                    timerSpan.textContent = formatTime(remain);
-                    timerSpan.parentElement.classList.toggle('negative', remain < 0);
-                } else {
-                    timerSpan.textContent = '01:00';
-                    timerSpan.parentElement.classList.remove('negative');
-                }
-            }
-        });
-        updateStats();
-    }
-
-    function updateStats() {
-        let expired=0, refill=0, inuse=0, available=0, paused=0;
-        for (let i=1; i<=30; i++) {
-            const shId = `SH-${String(i).padStart(3,'0')}`;
-            const s = activeSessions.find(s => s.shishaId === shId);
-            if (!s) available++;
-            else if (s.paused) paused++;
-            else if (s.status === 'expired') expired++;
-            else if (s.status === 'refill') refill++;
-            else inuse++;
-        }
-        document.getElementById('totalActive').innerText = inuse;
-        document.getElementById('totalRefill').innerText = refill;
-        document.getElementById('totalExpired').innerText = expired;
-        document.getElementById('totalPaused').innerText = paused;
-        document.getElementById('totalAvailable').innerText = available;
     }
 
     function renderTV() {
@@ -450,30 +382,69 @@
         updateStats();
     }
 
-    // Clock update
+    function updateStats() {
+        let expired=0, refill=0, inuse=0, available=0, paused=0;
+        for (let i=1; i<=30; i++) {
+            const shId = `SH-${String(i).padStart(3,'0')}`;
+            const s = activeSessions.find(s => s.shishaId === shId);
+            if (!s) available++;
+            else if (s.paused) paused++;
+            else if (s.status === 'expired') expired++;
+            else if (s.status === 'refill') refill++;
+            else inuse++;
+        }
+        document.getElementById('totalActive').innerText = inuse;
+        document.getElementById('totalRefill').innerText = refill;
+        document.getElementById('totalExpired').innerText = expired;
+        document.getElementById('totalPaused').innerText = paused;
+        document.getElementById('totalAvailable').innerText = available;
+    }
+
     function updateClock() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-ZA', { hour12: false });
         document.getElementById('liveClock').innerText = timeStr;
     }
 
-    // Auto-refresh from storage events
-    function storageEventHandler(e) {
-        if (e.key === SESSIONS_KEY) {
-            loadSessions();
+    loadSessions();
+    updateClock();
+    setInterval(updateClock, 1000);
+    
+    setInterval(() => {
+        let changed = false;
+        let now = new Date();
+        activeSessions.forEach(s => {
+            if (!s.paused) {
+                let elapsed = (now - s.lastRefillTime) / 1000;
+                let remain = COAL_DURATION - elapsed;
+                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
+                    s.remainingTime = remain;
+                    if (s.remainingTime <= 0) s.status = 'expired';
+                    else if (s.remainingTime <= REFILL_THRESHOLD) s.status = 'refill';
+                    else s.status = 'active';
+                    changed = true;
+                }
+            }
+        });
+        if (changed) {
+            localStorage.setItem(SESSIONS_KEY, JSON.stringify(activeSessions));
+            renderTV();
+        } else {
+            const cards = document.querySelectorAll('.hookah-card');
+            cards.forEach(card => {
+                const shishaId = card.getAttribute('data-shisha');
+                const session = activeSessions.find(s => s.shishaId === shishaId);
+                const timerSpan = card.querySelector('.timer-value');
+                if (timerSpan && session) {
+                    timerSpan.textContent = formatTime(session.remainingTime);
+                    timerSpan.parentElement.classList.toggle('negative', session.remainingTime < 0);
+                }
+            });
+            updateStats();
         }
-    }
-
-    // Initialize
-    function init() {
-        loadSessions();
-        updateClock();
-        setInterval(updateClock, 1000);
-        setInterval(updateTimers, 1000);
-        window.addEventListener('storage', storageEventHandler);
-    }
-
-    init();
+    }, 1000);
+    
+    window.addEventListener('storage', () => loadSessions());
 </script>
 </body>
 </html>

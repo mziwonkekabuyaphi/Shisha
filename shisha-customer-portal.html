@@ -204,20 +204,17 @@
 </div>
 
 <script>
-    // ---------- STORAGE KEYS ----------
     const WALLET_ACCOUNTS_KEY = 'rands_accounts_v2';
     const WALLET_TX_KEY = 'rands_transactions';
     const SESSIONS_KEY = 'shishaSessions';
     const REQUESTS_KEY = 'customerRequests';
-
     const SESSION_PRICE = 260;
     const REFILL_PRICE = 260;
-    const COAL_DURATION = 60; // seconds
+    const COAL_DURATION = 60;
 
     let activeSessions = [];
     let currentAccountId = "+27812345678";
 
-    // ---------- WALLET HELPERS ----------
     function getWalletAccounts() { return JSON.parse(localStorage.getItem(WALLET_ACCOUNTS_KEY) || '[]'); }
     function saveWalletAccounts(acc) { localStorage.setItem(WALLET_ACCOUNTS_KEY, JSON.stringify(acc)); triggerStorage(); }
     function addTransaction(accountId, desc, amount) {
@@ -253,7 +250,6 @@
     }
     function triggerStorage() { window.dispatchEvent(new Event('storage')); }
 
-    // ---------- SESSION HELPERS ----------
     function loadSessions() {
         let saved = localStorage.getItem(SESSIONS_KEY);
         if (saved) activeSessions = JSON.parse(saved).map(s => ({ ...s, startTime: new Date(s.startTime), lastRefillTime: new Date(s.lastRefillTime) }));
@@ -265,29 +261,11 @@
         triggerStorage();
         updateCustomerUI();
     }
-    function updateTimers() {
-        let now = new Date();
-        let changed = false;
-        activeSessions.forEach(s => {
-            if (!s.paused && (s.status === 'active' || s.status === 'refill')) {
-                let elapsed = (now - s.lastRefillTime) / 1000;
-                let remain = Math.max(0, COAL_DURATION - elapsed);
-                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
-                    s.remainingTime = remain;
-                    if (s.remainingTime <= 0) s.status = 'expired';
-                    else if (s.remainingTime <= 10) s.status = 'refill';
-                    else s.status = 'active';
-                    changed = true;
-                }
-            }
-        });
-        if (changed) saveSessions();
-    }
+
     function getCustomerSession() {
         return activeSessions.find(s => s.accountId === currentAccountId && !s.ended);
     }
 
-    // ---------- REQUEST SENDING ----------
     function sendRequest(type, amount = 0, serviceDetail = "") {
         let session = getCustomerSession();
         if (!session && type !== 'top_up') { alert("No active session. Please order first."); return false; }
@@ -309,7 +287,6 @@
         return true;
     }
 
-    // ---------- CUSTOMER UI ----------
     function updateCustomerUI() {
         let session = getCustomerSession();
         let balance = getWalletAccounts().find(a => a.id === currentAccountId)?.balance || 0;
@@ -328,12 +305,10 @@
         if (session.paused) container.innerHTML += "<br><span style='color:orange'>⏸️ Session paused by staff</span>";
     }
 
-    // ---------- EVENT LISTENERS ----------
     document.getElementById('customerPlaceOrderBtn').onclick = () => {
         if (getCustomerSession()) { alert("You already have an active session."); return; }
         let location = document.getElementById('orderLocation').value;
         let flavour = document.getElementById('orderFlavour').value;
-        // Find first available shisha
         let freeShisha = null;
         for (let i=1;i<=30;i++) { let id = `SH-${String(i).padStart(3,'0')}`; if (!activeSessions.find(s => s.shishaId === id)) { freeShisha = id; break; } }
         if (!freeShisha) { alert("No free shisha available."); return; }
@@ -370,10 +345,27 @@
         if(newAcc) { currentAccountId = newAcc; ensureDemoAccount(); updateCustomerUI(); alert(`Switched to ${currentAccountId}`); }
     };
 
-    // ---------- INIT & POLLING ----------
     ensureDemoAccount();
     loadSessions();
-    setInterval(updateTimers, 1000);
+    setInterval(() => {
+        let changed = false;
+        let now = new Date();
+        activeSessions.forEach(s => {
+            if (!s.paused && s.accountId === currentAccountId) {
+                let elapsed = (now - s.lastRefillTime) / 1000;
+                let remain = COAL_DURATION - elapsed;
+                if (Math.floor(s.remainingTime) !== Math.floor(remain)) {
+                    s.remainingTime = remain;
+                    if (s.remainingTime <= 0) s.status = 'expired';
+                    else if (s.remainingTime <= 15) s.status = 'refill';
+                    else s.status = 'active';
+                    changed = true;
+                }
+            }
+        });
+        if (changed) saveSessions();
+        else updateCustomerUI();
+    }, 1000);
     setInterval(loadSessions, 2000);
     window.addEventListener('storage', () => loadSessions());
 </script>

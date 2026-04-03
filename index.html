@@ -46,9 +46,9 @@
         .app-card {
             background: #1e1e2a;
             border-radius: 32px;
-            padding: 20px;
+            padding: 28px 20px;
             text-align: center;
-            transition: 0.2s;
+            transition: 0.3s;
             border: 1px solid #2a2a3a;
             cursor: pointer;
             text-decoration: none;
@@ -56,139 +56,155 @@
             color: inherit;
         }
         .app-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
             background: #2a2a38;
             border-color: #d32f2f;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.3);
         }
         .app-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 56px;
+            margin-bottom: 16px;
         }
         .app-title {
             font-size: 24px;
             font-weight: bold;
-            margin: 12px 0 8px;
+            margin: 12px 0 10px;
+            background: linear-gradient(135deg, #fff, #ffb3b3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         .app-desc {
             font-size: 14px;
             color: #aaa;
-            line-height: 1.4;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
-        button {
+        .btn-hint {
+            display: inline-block;
             background: #d32f2f;
             border: none;
             color: white;
-            padding: 8px 20px;
+            padding: 8px 24px;
             border-radius: 40px;
             font-weight: bold;
-            margin-top: 16px;
+            margin-top: 18px;
             cursor: pointer;
             transition: 0.2s;
             font-size: 14px;
+            text-decoration: none;
         }
-        .app-card:hover button {
+        .app-card:hover .btn-hint {
             background: #ff4444;
             transform: scale(1.02);
         }
         .info-note {
             background: #1e1e2a;
             border-radius: 28px;
-            padding: 20px;
-            margin-top: 40px;
+            padding: 20px 24px;
+            margin-top: 48px;
             text-align: center;
             font-size: 14px;
             border-left: 4px solid #ff9800;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .info-note i {
             margin-right: 8px;
+            font-style: normal;
+            display: inline-block;
         }
         .footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 48px;
             padding: 20px;
-            font-size: 12px;
+            font-size: 13px;
             color: #666;
             border-top: 1px solid #2a2a3a;
+        }
+        .footer strong {
+            color: #ff9999;
+            font-weight: 600;
         }
         @media (max-width: 700px) {
             .app-grid { gap: 16px; }
             h1 { font-size: 1.8rem; }
             .app-title { font-size: 20px; }
+            .app-card { padding: 20px 16px; }
         }
     </style>
 </head>
 <body>
 <div class="launcher">
     <h1>🍃 SHISHA PREMIUM LOUNGE</h1>
-    <div class="sub">✦ Unified Real-Time System ✦</div>
+    <div class="sub">✦ Unified Real-Time Management ✦</div>
     
     <div class="app-grid">
         <!-- SHISHA POS Card - redirects to shisha-pos.html -->
         <a href="shisha-pos.html" class="app-card" data-app="pos">
             <div class="app-icon">💼</div>
             <div class="app-title">SHISHA POS</div>
-            <div class="app-desc">Start sessions, cash/card/wallet, manage all hookahs</div>
-            <button>OPEN POS</button>
+            <div class="app-desc">Start sessions, cash/card/wallet, manage all hookahs, track payments</div>
+            <span class="btn-hint">OPEN POS →</span>
         </a>
 
-        <!-- STAFF DASHBOARD Card - redirects to staff-dashboard.html -->
-        <a href="staff-dashboard.html" class="app-card" data-app="staff">
+        <!-- STAFF DASHBOARD Card - redirects to shisha-staff-dashboard.html -->
+        <a href="shisha-staff-dashboard.html" class="app-card" data-app="staff">
             <div class="app-icon">👨‍💼</div>
             <div class="app-title">STAFF DASHBOARD</div>
-            <div class="app-desc">Customer requests, priority pipes, refill/pause/end</div>
-            <button>OPEN STAFF</button>
+            <div class="app-desc">Customer requests, priority pipes, refill/pause/end sessions instantly</div>
+            <span class="btn-hint">OPEN STAFF →</span>
         </a>
 
-        <!-- CUSTOMER PORTAL Card - redirects to customer-portal.html -->
-        <a href="customer-portal.html" class="app-card" data-app="customer">
+        <!-- CUSTOMER PORTAL Card - redirects to shisha-customer-portal.html -->
+        <a href="shisha-customer-portal.html" class="app-card" data-app="customer">
             <div class="app-icon">👤</div>
             <div class="app-title">CUSTOMER PORTAL</div>
-            <div class="app-desc">Wallet, order session, send requests, view timer</div>
-            <button>OPEN PORTAL</button>
+            <div class="app-desc">Wallet, order session, send requests, view live timer & history</div>
+            <span class="btn-hint">OPEN PORTAL →</span>
         </a>
 
         <!-- TV MONITOR Card - redirects to shisha-live-monitor.html -->
         <a href="shisha-live-monitor.html" class="app-card" data-app="monitor">
             <div class="app-icon">📺</div>
             <div class="app-title">TV MONITOR</div>
-            <div class="app-desc">Live hookah status, timer, alerts – big screen ready</div>
-            <button>OPEN MONITOR</button>
+            <div class="app-desc">Live hookah status, timer, alerts – big screen TV display ready</div>
+            <span class="btn-hint">OPEN MONITOR →</span>
         </a>
     </div>
 
     <div class="info-note">
-        <i>⚡</i> All four systems communicate instantly via shared localStorage & storage events.<br>
-        ✅ Start/end/refill/pause from ANY dashboard → updates everywhere (POS, Staff Dashboard, Customer Portal, TV Monitor).<br>
-        🔄 Real-time sync across all devices – no refresh needed.
+        <i>⚡</i> <strong>Real-Time Cross-System Sync</strong><br>
+        ✅ Start / End / Refill / Pause from ANY dashboard → updates everywhere (POS, Staff, Customer Portal, TV Monitor).<br>
+        🔄 All systems share the same data layer – no manual refresh required.
     </div>
     
     <div class="footer">
-        Created by <strong style="color:#ff9999;">Mziwonke KaBuyaphi</strong> | Rands Shisha Lounge
+        Created by <strong>Mziwonke KaBuyaphi</strong> | Rands Shisha Lounge — Unified Ecosystem
     </div>
 </div>
 
 <script>
-    // Optional: Add a small console message to confirm index is loaded
     (function() {
-        console.log('🏠 Shisha Lounge Launcher | All systems redirect to separate HTML files');
-        console.log('📁 File structure expected:');
-        console.log('   - index.html (this file)');
+        // Launcher console info & optional redirect fallback check
+        console.log('🏠 Shisha Lounge Launcher | Redirects configured');
+        console.log('📁 Expected files in same directory:');
+        console.log('   - index.html (current)');
         console.log('   - shisha-pos.html');
-        console.log('   - staff-dashboard.html');
-        console.log('   - customer-portal.html');
+        console.log('   - shisha-staff-dashboard.html');
+        console.log('   - shisha-customer-portal.html');
         console.log('   - shisha-live-monitor.html');
         
-        // Optional: If any card fails to redirect due to missing files, show friendly message in console
+        // Optional: graceful fallback if any link fails (just in case of missing files)
         const cards = document.querySelectorAll('.app-card');
         cards.forEach(card => {
             card.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
-                if (!href) {
+                if (!href || href === '#') {
                     e.preventDefault();
-                    console.warn('⚠️ Missing redirect file for:', this.querySelector('.app-title')?.innerText);
-                    alert('Page not ready yet. Please ensure all HTML files are in the same directory.');
+                    console.warn('⚠️ Missing redirect target for:', this.querySelector('.app-title')?.innerText);
+                    alert('Page file not found. Please ensure all HTML files are placed in the same folder as index.html');
                 }
+                // No extra prevention – let browser handle navigation
             });
         });
     })();

@@ -21,20 +21,20 @@
             background: #d32f2f;
             color: white;
             border-radius: 28px;
-            padding: 20px 24px;
+            padding: 12px 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         .header-logo {
             flex-shrink: 0;
         }
         .header-logo img {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid white;
@@ -45,13 +45,13 @@
             flex: 1;
         }
         .header-text h1 {
-            font-size: 28px;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
+            font-size: 20px;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
         }
         .header-text p {
-            font-size: 13px;
-            opacity: 0.9;
+            font-size: 11px;
+            opacity: 0.85;
         }
         .account-bar {
             display: flex;
@@ -61,61 +61,67 @@
             gap: 12px;
             margin-bottom: 20px;
             background: white;
-            padding: 12px 20px;
+            padding: 10px 16px;
             border-radius: 40px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         .account-bar span {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             color: #d32f2f;
         }
         .account-bar input {
             background: #f5f5f5;
             border: 1px solid #e0e0e0;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 30px;
-            font-size: 14px;
-            width: 180px;
+            font-size: 13px;
+            width: 160px;
         }
         .account-bar button {
             background: #ff9800;
             border: none;
             color: #1e1e1e;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 12px;
         }
         .card {
             background: white;
             border-radius: 24px;
-            padding: 18px;
+            padding: 16px;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
             border: 1px solid #eee;
         }
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #d32f2f;
+        }
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
         .btn-icon {
             background: #fff;
             border: 1px solid #ffe0e0;
             border-radius: 20px;
-            padding: 12px 6px;
+            padding: 10px 6px;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
             transition: 0.2s;
         }
         .btn-icon i {
             display: block;
-            font-size: 20px;
+            font-size: 18px;
             color: #d32f2f;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .btn-icon:hover {
             background: #fff5f5;
@@ -125,13 +131,13 @@
             background: linear-gradient(135deg, #d32f2f, #ff4444);
             color: white;
             text-align: center;
-            padding: 16px;
+            padding: 14px;
             border-radius: 50px;
             font-weight: bold;
             margin-top: 12px;
             cursor: pointer;
             transition: 0.2s;
-            font-size: 18px;
+            font-size: 16px;
             letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(211,47,47,0.3);
         }
@@ -141,12 +147,12 @@
             box-shadow: 0 2px 8px rgba(211,47,47,0.4);
         }
         .timer {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 800;
             font-family: monospace;
             text-align: center;
-            margin: 12px 0;
-            letter-spacing: 4px;
+            margin: 10px 0;
+            letter-spacing: 3px;
         }
         .timer.positive {
             color: #d32f2f;
@@ -165,22 +171,22 @@
         .coal-container {
             background: #2c2c2c;
             border-radius: 40px;
-            padding: 12px 16px;
-            margin: 15px 0;
+            padding: 10px 14px;
+            margin: 12px 0;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.1);
         }
         .coal-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 13px;
+            margin-bottom: 6px;
+            font-size: 11px;
             font-weight: bold;
             color: #ffaa66;
         }
         .coal-bar-bg {
             background: #3a3a3a;
             border-radius: 30px;
-            height: 20px;
+            height: 16px;
             overflow: hidden;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
         }
@@ -199,13 +205,13 @@
             right: 5px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 14px;
+            font-size: 11px;
             opacity: 0.8;
         }
         .coal-status {
             text-align: center;
-            margin-top: 8px;
-            font-size: 12px;
+            margin-top: 6px;
+            font-size: 11px;
             font-weight: bold;
         }
         .coal-status.critical {
@@ -230,16 +236,17 @@
         }
         select, input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border-radius: 30px;
             border: 1px solid #ddd;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            font-size: 13px;
         }
         .small-text {
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
             text-align: center;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .status-paused {
             background: #ffa50020;
@@ -247,6 +254,7 @@
             padding: 8px;
             border-radius: 12px;
             margin-top: 8px;
+            font-size: 12px;
         }
         .expired-warning {
             background: #ffebee;
@@ -256,6 +264,7 @@
             margin-top: 8px;
             color: #b71c1c;
             font-weight: bold;
+            font-size: 12px;
         }
         
         /* Beautiful Modal Styles */
@@ -283,7 +292,7 @@
             background: white;
             border-radius: 32px;
             width: 90%;
-            max-width: 380px;
+            max-width: 350px;
             overflow: hidden;
             transform: scale(0.9);
             transition: transform 0.3s ease;
@@ -293,12 +302,12 @@
             transform: scale(1);
         }
         .modal-header {
-            padding: 20px 24px 12px 24px;
+            padding: 16px 20px 10px 20px;
             text-align: center;
         }
         .modal-icon {
-            font-size: 52px;
-            margin-bottom: 12px;
+            font-size: 48px;
+            margin-bottom: 8px;
         }
         .modal-icon.success { color: #2e7d32; }
         .modal-icon.error { color: #d32f2f; }
@@ -306,26 +315,26 @@
         .modal-icon.info { color: #2196f3; }
         .modal-icon.question { color: #ff9800; }
         .modal-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: #1e1e2a;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .modal-message {
-            padding: 0 24px;
-            font-size: 15px;
+            padding: 0 20px;
+            font-size: 14px;
             color: #555;
             line-height: 1.5;
             text-align: center;
             white-space: pre-line;
         }
         .modal-input {
-            margin: 16px 24px;
-            padding: 12px 16px;
+            margin: 12px 20px;
+            padding: 10px 14px;
             border: 2px solid #e0e0e0;
             border-radius: 40px;
-            font-size: 15px;
-            width: calc(100% - 48px);
+            font-size: 14px;
+            width: calc(100% - 40px);
         }
         .modal-input:focus {
             outline: none;
@@ -333,16 +342,16 @@
         }
         .modal-buttons {
             display: flex;
-            gap: 12px;
-            padding: 16px 24px 24px 24px;
+            gap: 10px;
+            padding: 12px 20px 20px 20px;
         }
         .modal-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             border: none;
             border-radius: 40px;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
             transition: 0.2s;
         }
@@ -368,13 +377,22 @@
             background: #1b5e20;
         }
         
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
         @media (max-width: 550px) {
             .header-logo img {
-                width: 45px;
-                height: 45px;
+                width: 40px;
+                height: 40px;
             }
             .header-text h1 {
-                font-size: 22px;
+                font-size: 16px;
+            }
+            .timer {
+                font-size: 28px;
             }
         }
     </style>
@@ -382,10 +400,10 @@
 <body>
 <div class="app-header">
     <div class="header-logo">
-        <img src="images/rands-logo.png" alt="Rands Lounge Logo" onerror="this.src='https://via.placeholder.com/60x60?text=Rands'; this.onerror=null;">
+        <img src="images/rands-logo.png" alt="Rands Lounge Logo" onerror="this.src='https://via.placeholder.com/50x50?text=Rands'; this.onerror=null;">
     </div>
     <div class="header-text">
-        <h1>🍃 SHISHA PREMIUM LOUNGE</h1>
+        <h1>SHISHA PREMIUM LOUNGE</h1>
         <p>✦ Customer Portal ✦</p>
     </div>
 </div>
@@ -393,12 +411,12 @@
 <div class="account-bar">
     <span><i class="fa fa-phone"></i> My Account</span>
     <input type="text" id="customerAccountInput" placeholder="+27812345678" value="+27812345678">
-    <button id="setAccountBtn">Set / Refresh</button>
+    <button id="setAccountBtn">Set</button>
 </div>
 
 <div class="card">
     <div class="flex-between">
-        <div><strong>💰 My Wallet Balance</strong></div>
+        <div><strong>💰 Wallet Balance</strong></div>
         <div><span id="custWalletBalance">R0.00</span></div>
     </div>
     <div class="grid-2" style="margin-top: 10px;">
@@ -409,7 +427,7 @@
 
 <div class="card" id="custActiveSessionCard">
     <h3>🔥 My Hookah Session</h3>
-    <div id="custSessionInfo">No active session. Order below.</div>
+    <div id="custSessionInfo" style="font-size: 13px;">No active session. Order below.</div>
     <div id="custTimerDisplay" class="timer positive">00:00</div>
     
     <!-- COAL LEVEL INDICATOR -->
@@ -426,8 +444,8 @@
         </div>
     </div>
     
-    <div id="pauseStatusMsg" style="font-size:13px; text-align:center; margin-bottom:10px;"></div>
-    <div class="grid-3" id="custRequestButtons" style="margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+    <div id="pauseStatusMsg" style="font-size:12px; text-align:center; margin-bottom:8px;"></div>
+    <div class="grid-3" id="custRequestButtons" style="margin-top: 10px;">
         <div class="btn-icon request-action" data-req="coal_refill"><i class="fa fa-fire"></i> Coal Refill</div>
         <div class="btn-icon request-action" data-req="flavor_change"><i class="fa fa-leaf"></i> Change Flavor</div>
         <div class="btn-icon request-action" data-req="extend_time"><i class="fa fa-clock"></i> Extend 30min</div>
@@ -665,7 +683,6 @@
         
         coalIndicator.style.display = 'block';
         
-        // Calculate percentage (cap between 0 and 100)
         let percentage = (remainingSeconds / COAL_DURATION) * 100;
         percentage = Math.min(100, Math.max(0, percentage));
         
@@ -676,26 +693,25 @@
         if (coalFill) coalFill.style.width = `${percentage}%`;
         if (coalPercentageSpan) coalPercentageSpan.innerText = `${Math.floor(percentage)}%`;
         
-        // Update color and status message based on coal level
         if (coalStatusSpan) {
             if (percentage <= 0) {
-                coalStatusSpan.innerHTML = '💀 Coal is DEAD! Request refill immediately!';
+                coalStatusSpan.innerHTML = '💀 Coal is DEAD! Request refill!';
                 coalStatusSpan.className = 'coal-status critical';
                 coalFill.style.background = 'linear-gradient(90deg, #666, #444)';
             } else if (percentage <= 20) {
-                coalStatusSpan.innerHTML = '⚠️ Coal is dying! Need refill soon!';
+                coalStatusSpan.innerHTML = '⚠️ Coal dying! Need refill soon!';
                 coalStatusSpan.className = 'coal-status critical';
                 coalFill.style.background = 'linear-gradient(90deg, #ff4444, #cc0000)';
             } else if (percentage <= 40) {
-                coalStatusSpan.innerHTML = '🟠 Coal is low - time to think about refill';
+                coalStatusSpan.innerHTML = '🟠 Coal low - time to refill';
                 coalStatusSpan.className = 'coal-status warning';
                 coalFill.style.background = 'linear-gradient(90deg, #ff8844, #ff5500)';
             } else if (percentage <= 70) {
-                coalStatusSpan.innerHTML = '🟡 Coal is getting warm - still good';
+                coalStatusSpan.innerHTML = '🟡 Coal getting warm';
                 coalStatusSpan.className = 'coal-status warning';
                 coalFill.style.background = 'linear-gradient(90deg, #ffaa44, #ff7700)';
             } else {
-                coalStatusSpan.innerHTML = '🔥 Coal is fresh and hot! Enjoy your session!';
+                coalStatusSpan.innerHTML = '🔥 Coal fresh & hot!';
                 coalStatusSpan.className = 'coal-status good';
                 coalFill.style.background = 'linear-gradient(90deg, #ff6b35, #ff4500)';
             }
@@ -767,7 +783,6 @@
         let timeString = formatTimeWithNegative(session.remainingTime);
         timerDiv.innerHTML = timeString;
         
-        // Update coal level based on remaining time (only show if positive or we want to show dead coal)
         updateCoalLevel(Math.max(0, session.remainingTime));
         
         if (session.remainingTime < 0) {
@@ -784,7 +799,7 @@
         } else {
             pauseMsgDiv.innerHTML = '';
             if (session.remainingTime <= 15 && session.remainingTime > 0) {
-                statusHtml += `<div style="color:#ff9800; margin-top:6px;"><i class="fa fa-exclamation-triangle"></i> ⚠️ Coal running low! Request refill.</div>`;
+                statusHtml += `<div style="color:#ff9800; margin-top:6px; font-size:12px;"><i class="fa fa-exclamation-triangle"></i> ⚠️ Coal running low! Request refill.</div>`;
             } else if (session.remainingTime <= 0) {
                 statusHtml += `<div class="expired-warning"><i class="fa fa-skull-crossbones"></i> ⏰ Session EXPIRED! Coal is dead. Please end session or request refill.</div>`;
             }
@@ -841,7 +856,7 @@
         };
         activeSessions.push(newSess);
         saveSessions();
-        await showAlert(`✅ Session started successfully!\n\nHookah: ${freeShisha}\nLocation: ${location}\nFlavour: ${flavour}\n💰 New balance: R${walletRes.newBalance.toFixed(2)}\n\n⏱️ Your 60 minute session begins now!`, "Success", "success");
+        await showAlert(`✅ Session started!\n\nHookah: ${freeShisha}\nLocation: ${location}\nFlavour: ${flavour}\n💰 New balance: R${walletRes.newBalance.toFixed(2)}`, "Success", "success");
         updateCustomerUI();
     };
 
@@ -891,7 +906,6 @@
         }
     };
     
-    // Puff History button - shows "Recent smoking activity" as modal title
     document.getElementById('custHistoryBtn').onclick = async () => { 
         let tx = JSON.parse(localStorage.getItem(WALLET_TX_KEY) || '{}')[currentAccountId] || []; 
         if(tx.length === 0) {

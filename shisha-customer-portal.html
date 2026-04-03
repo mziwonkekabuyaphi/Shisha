@@ -59,14 +59,20 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-top: 12px;
-            background: rgba(255,255,255,0.15);
-            padding: 10px 14px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 12px 20px;
             border-radius: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .account-bar span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #d32f2f;
         }
         .account-bar input {
-            background: white;
-            border: none;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
             padding: 8px 14px;
             border-radius: 30px;
             font-size: 14px;
@@ -376,7 +382,7 @@
 <body>
 <div class="app-header">
     <div class="header-logo">
-        <img src="images/rands-logo2.png" alt="Rands Lounge Logo" onerror="this.src='https://via.placeholder.com/60x60?text=Rands'; this.onerror=null;">
+        <img src="images/rands-logo.png" alt="Rands Lounge Logo" onerror="this.src='https://via.placeholder.com/60x60?text=Rands'; this.onerror=null;">
     </div>
     <div class="header-text">
         <h1>🍃 SHISHA PREMIUM LOUNGE</h1>
@@ -384,8 +390,8 @@
     </div>
 </div>
 
-<div class="account-bar" style="margin-bottom: 20px;">
-    <span style="font-size:14px;">👤 My Account (Phone)</span>
+<div class="account-bar">
+    <span><i class="fa fa-phone"></i> My Account</span>
     <input type="text" id="customerAccountInput" placeholder="+27812345678" value="+27812345678">
     <button id="setAccountBtn">Set / Refresh</button>
 </div>
